@@ -17,7 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 import json
 from django.http import FileResponse
-
+from django.contrib import messages
 
 
 
@@ -62,11 +62,11 @@ def signup(request):
 
 def login(request):
     if request.method == 'POST':
-        user_name = request.POST.get('user_name')
+        email = request.POST.get('email')
         password = request.POST.get('password')
-        print(user_name,password)
+
         try:
-            user = User.objects.get(user_name=user_name)
+            user = User.objects.get(email=email)
         except User.DoesNotExist:
             # User not found, show an error message
             error_message = 'Invalid staff_id or password.'
@@ -74,7 +74,7 @@ def login(request):
 
         # Check if the password matches
         if user.Password == encrypt_password(password):
-            request.session['user']={"username":user_name}
+            request.session['user']={"username":user.user_name,'email':email}
 
             return redirect('dashboard')
         else:
@@ -95,11 +95,17 @@ def student(request):
     if request.method == 'POST':
         reg_no = request.POST.get('reg_no')
         data = Student.objects.filter(reg_no=reg_no)
+        role =request.session.get('user')['username']
+        role=''
+        print('------------------------------',role)
         if data:
             reg_value = get_object_or_404(Student, reg_no=reg_no)
-            print(reg_value)
-            return render(request, 'update.html',{"reg_value":reg_value,"batch_years":batch_years})
-        return render(request, 'add.html',{"reg_no":reg_no,"batch_years":batch_years})
+            if role != '':
+                return render(request, 'update.html',{"reg_value":reg_value,"batch_years":batch_years,})
+            else:
+                return render(request, 'student_view.html',{"reg_value":reg_value,"batch_years":batch_years})
+        if role != '':
+            return render(request, 'add.html',{"reg_no":reg_no,"batch_years":batch_years})
     return render(request, 'student.html')
 
 
@@ -125,28 +131,28 @@ def insert_grade(request):
             sem8 = float(form.cleaned_data.get('semester8')) if form.cleaned_data.get('semester8') is not None else None
 
             # Calculate CGPA based on available semesters
-            if sem8 is not None and sem8!=0:
-                cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6 + sem7 + sem8) / 8
-            elif sem7 is not None and sem7!=0:
-                cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6 + sem7) / 7
-            elif sem6 is not None and sem6!=0:
-                cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6) / 6
-            elif sem5 is not None and sem5!=0:
-                cgpa = (sem1 + sem2 + sem3 + sem4 + sem5) / 5
-            elif sem4 is not None and sem4!=0:
-                cgpa = (sem1 + sem2 + sem3 + sem4) / 4
-            elif sem3 is not None and sem3!=0:
-                cgpa = (sem1 + sem2 + sem3) / 3
-            elif sem2 is not None and sem2!=0:
-                cgpa = (sem1 + sem2) / 2
-            elif sem1 is not None and sem1!=0:
-                cgpa = sem1
+            # if sem8 is not None and sem8!=0:
+            #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6 + sem7 + sem8) / 8
+            # elif sem7 is not None and sem7!=0:
+            #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6 + sem7) / 7
+            # elif sem6 is not None and sem6!=0:
+            #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6) / 6
+            # elif sem5 is not None and sem5!=0:
+            #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5) / 5
+            # elif sem4 is not None and sem4!=0:
+            #     cgpa = (sem1 + sem2 + sem3 + sem4) / 4
+            # elif sem3 is not None and sem3!=0:
+            #     cgpa = (sem1 + sem2 + sem3) / 3
+            # elif sem2 is not None and sem2!=0:
+            #     cgpa = (sem1 + sem2) / 2
+            # elif sem1 is not None and sem1!=0:
+            #     cgpa = sem1
 
-            cgpa=round(cgpa,4)
+            # cgpa=round(cgpa,4)
 
             # Save the form data to the student object
             user = form.save(commit=False)
-            user.cgpa = cgpa
+            # user.cgpa = cgpa
             user.sem1 = sem1
             user.sem2 = sem2
             user.sem3 = sem3
@@ -156,8 +162,8 @@ def insert_grade(request):
             user.sem7 = sem7
             user.sem8 = sem8
             user.save()
-
-            return redirect('insert_grade')
+            # messages.success(request, 'Data successfully added/updated.')
+            return render(request,'student.html',{'message':"Data successfully added/updated."})
 
         else:
             print('Form errors:', form.errors)  # Debug print for form errors
@@ -209,6 +215,7 @@ def download_excel(request):
 
 
 def upload_cgpa(request):
+    data = Student.objects.all()
     if request.method == 'POST':
         excel_file = request.FILES['file']
 
@@ -255,6 +262,6 @@ def upload_cgpa(request):
             )
 
         messages.success(request, 'Student data uploaded successfully!')
-        return redirect('upload_cgpa')
+        return render(request, 'hod/dashboard.html',{"data":data,'message':"Data successfully added/updated."})
 
-    return render(request, 'upload_cgpa.html')
+    return render(request, 'hod/dashboard.html',{"data":data})

@@ -21,7 +21,9 @@ body {
   /* text-align: end; */
   display: flex;
 }
-
+.page-content .menu{
+  text-align: end;
+}
 .file_up_down input{
   margin-left: 1rem;
   width: fit-content;  

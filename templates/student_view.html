@@ -46,7 +46,7 @@
 
               <div class="input-field">
                 <label>Batch</label>
-                <select id="batch" name="batch" class="form-control" value="{{ reg_value.batch }}" required>
+                <select id="batch" name="batch" class="form-control" value="{{ reg_value.batch }}" readonly>
                   
                   {% for year in batch_years %}
                   <option value="{{ year }}" {% if batch == year %}selected{% endif %}>{{ year }}</option>
@@ -57,7 +57,7 @@
 
               <div class="input-field">
                 <label>Name</label>
-                <input type="text" id="fromdate" name="student_name" value="{{ reg_value.student_name }}" placeholder="Enter Name" required>
+                <input type="text" id="fromdate" name="student_name" value="{{ reg_value.student_name }}" placeholder="Enter Name" readonly>
               </div>
 
               <div class="input-field">
@@ -77,20 +77,20 @@
 
               <div class="input-field">
                 <label>SSLC Percentage</label>
-                <input type="text" name="sslc" id="sslc" value="{{ reg_value.sslc }}" placeholder="Enter SSLC Percentage" required>
+                <input type="text" name="sslc" id="sslc" value="{{ reg_value.sslc }}" placeholder="Enter SSLC Percentage" readonly>
               </div>
 
               <div class="input-field">
                 <label>HSC Percentage</label>
-                <input type="text" name="hsc" id="hsc" value="{{ reg_value.hsc }}" placeholder="Enter HSC Percentage" required>
+                <input type="text" name="hsc" id="hsc" value="{{ reg_value.hsc }}" placeholder="Enter HSC Percentage" readonly>
               </div>
               <div class="input-field"> 
                 <label>CGPA</label>
-                <input type="text" name="cgpa" id="cgpa" value="{{ reg_value.cgpa }}" placeholder="Enter Current CGPA" required>
+                <input type="text" name="cgpa" id="cgpa" value="{{ reg_value.cgpa }}" placeholder="Enter Current CGPA" readonly>
             </div>
               <div class="input-field">
                 <label>No of Current Arrear</label>
-                <input type="number" name="no_of_arrear" value="{{ reg_value.no_of_arrear }}" placeholder="Enter No of Current Arrear" required>
+                <input type="number" name="no_of_arrear" value="{{ reg_value.no_of_arrear }}" placeholder="Enter No of Current Arrear" readonly>
               </div>
 
               <div class="input-field">
@@ -109,46 +109,42 @@
             <div class="fields" id="fields-container">
                 <div class="input-field">
                     <label>Semester 1</label>
-                    <input type="text" name="semester1" id="semester1" value="{{ reg_value.semester1|default:0  }}" placeholder="Enter semester1" required>
+                    <input type="text" name="semester1" id="semester1" value="{{ reg_value.semester1|default:0  }}" placeholder="Enter semester1" readonly>
                   </div>
                   <div class="input-field">
                     <label>Semester 2</label>
-                    <input type="text" name="semester2" id="semester2" value="{{ reg_value.semester2|default:0  }}" placeholder="Enter semester2" required>
+                    <input type="text" name="semester2" id="semester2" value="{{ reg_value.semester2|default:0  }}" placeholder="Enter semester2" readonly>
                   </div>
                   <div class="input-field">
                     <label>Semester 3</label>
-                    <input type="text" name="semester3" id="semester3" value="{{ reg_value.semester3|default:0  }}" placeholder="Enter semester3" required>
+                    <input type="text" name="semester3" id="semester3" value="{{ reg_value.semester3|default:0  }}" placeholder="Enter semester3" readonly>
                   </div>
                   <div class="input-field">
                     <label>Semester 4</label>
-                    <input type="text" name="semester4" id="semester4" value="{{ reg_value.semester4|default:0  }}" placeholder="Enter semester4" required>
+                    <input type="text" name="semester4" id="semester4" value="{{ reg_value.semester4|default:0  }}" placeholder="Enter semester4" readonly>
                   </div>
                   <div class="input-field">
                     <label>Semester 5</label>
-                    <input type="text" name="semester5" id="semester5" value="{{ reg_value.semester5|default:0 }}" placeholder="Enter semester5" required>
+                    <input type="text" name="semester5" id="semester5" value="{{ reg_value.semester5|default:0 }}" placeholder="Enter semester5" readonly>
                 </div>
                 
                   <div class="input-field">
                     <label>Semester 6</label>
-                    <input type="text" name="semester6" id="semester6" value="{{ reg_value.semester6|default:0  }}" placeholder="Enter semester6" required>
+                    <input type="text" name="semester6" id="semester6" value="{{ reg_value.semester6|default:0  }}" placeholder="Enter semester6" readonly>
                   </div>
                   <div class="input-field">
                     <label>Semester 7</label>
-                    <input type="text" name="semester7" id="semester7" value="{{ reg_value.semester7|default:0  }}" placeholder="Enter semester7" required>
+                    <input type="text" name="semester7" id="semester7" value="{{ reg_value.semester7|default:0  }}" placeholder="Enter semester7" readonly>
                   </div>
                   <div class="input-field">
                     <label>Semester 8</label>
-                    <input type="text" name="semester8" id="semester8" value="{{ reg_value.semester8|default:0  }}" placeholder="Enter semester8" required>
+                    <input type="text" name="semester8" id="semester8" value="{{ reg_value.semester8|default:0  }}" placeholder="Enter semester8" readonly>
                   </div>
                  
 
             </div>
-           
-            <button type="submit" class="nextBtn">
-              <span class="btnText">Submit</span>
-              <i class="uil uil-navigator"></i>
-            </button>
-  
+
+            
           </div>
         </div>
       </form>

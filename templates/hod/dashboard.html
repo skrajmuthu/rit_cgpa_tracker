@@ -1,4 +1,5 @@
 
+
 <!doctype html>
 <html lang="en">
     {% load static %}
@@ -25,14 +26,26 @@
     </head>
     <body>
         <div class="page-content p-5" id="content">
+            <div class="menu">
+                <a href="{% url 'index' %}">
+                <button type="submit" class="nextBtn">
+                    <span class="btnText">Home</span>
+                    <i class="uil uil-navigator"></i>
+                </button> </a>
+                <a href="{% url 'login' %}">
+                    <button type="submit" class="nextBtn">
+                        <span class="btnText">Logout</span>
+                        <i class="uil uil-navigator"></i>
+                </button> </a>
+            </div>
             <div class="sidebarCollapse">
-              
+                <a href="" hidden id="django-message">{{message|default:0}}</a>
             </div>
             <div class="title">
                 <h2 class="display-5" style="margin-bottom: .9rem;">CGPA Table</h2>
                 
             </div>
-            <div class="file_up_down" style="">
+            <div class="file_up_down">
                 <a href="{% url 'download_excel' %}">
                 <button type="submit" class="nextBtn">
                     <span class="btnText">Sample formate excel</span>
@@ -47,13 +60,7 @@
                         <span class="btnText">Upload</span>
                         <i class="uil uil-upload"></i>
                     </button>
-                </form>{% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+                </form>
             </div>
             <div class="row">
                 <div class="container table_container">
@@ -167,7 +174,16 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
         <!-- <script src="{% static 'JS/multiselect-dropdown.js' %}"></script> -->
-
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get the message from the DOM
+                const message = document.getElementById('django-message');
+                if (message.textContent != 0 ) {
+                    // Show the alert box with the message
+                    alert(message.textContent);
+                }
+            });
+        </script>
         <script>
             // Function to collect filter values and display in PDF
             function collectFilterValues() {
