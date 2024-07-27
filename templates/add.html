@@ -1,4 +1,5 @@
 
+{% extends "base.html" %}
 <!DOCTYPE html>
 {% load static %}
 <html>
@@ -9,24 +10,22 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'css/style1.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        body {background-image: url({% static 'images/background.jpg' %});
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
-            }
-    </style>
+   
 </head>
 <body>
  
 <!-- End vertical navbar -->
 {% block maincontent %}
 <div class="rit"></div>
-<img src="{% static 'images/rit.jpg' %}" alt="">
+
 <!-- Page content holder -->
 <div class="page-content p-5 " id="content">
   <!-- Toggle button -->
- 
+  <div class="sidebarCollapse">
+    <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
+    <a href="" hidden id="django-message">{{message|default:0}}</a>
+</div>
+<br><br>
 
   <div class="row ">
   <div class="container"><center><h4 >

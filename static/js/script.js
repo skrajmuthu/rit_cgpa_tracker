@@ -1,297 +1,294 @@
-function goBack() {
-  window.history.back();
-}
-
-function goForward() {
-  window.history.forward();
-}
-
-
-$(document).ready(function(){
-    $("#education").on("change",function(){
-      var name=$("#education").val();
-      $(".Qualified").hide();
-      $("."+name).show();
-    }).change();
-  });
-
-
-  $(document).ready(function(){
-    $("#Quota").on("change",function(){
-      var name=$("#Quota").val();
-      $(".modify").hide();
-      $("."+name).show();
-    }).change();
-  });
-
-  
-  $(document).ready(function(){
-    $("#sslcmark").on("change",function(){
-      var name=$("#sslcmark").val();
-      $(".othersmark").hide();
-      $("."+name).show();
-    }).change();
-  });
-
-  $(document).ready(function(){
-    $("#ScholarShip").on("change",function(){
-      var name=$("#ScholarShip").val();
-      $(".gratuate").hide();
-      $("."+name).show();
-    }).change();
-  });
-
-  $(document).ready(function(){
-    $("#preformadmissionfor").on("change",function(){
-      var name=$("#preformadmissionfor").val();
-      $(".admissionfor").hide();
-      $("."+name).show();
-    }).change();
-
-  });  $(document).ready(function(){
-    $("#preformdiploma").on("change",function(){
-      var name=$("#preformdiploma").val();
-      $(".diplomachange").hide();
-      $("."+name).show();
-    }).change();
-  });
-
-  $(document).ready(function(){
-    $("#Tenth_Std_School_Name").on("change",function(){
-      var name=$("#Tenth_Std_School_Name").val();
-      $(".tenthschoolchange").hide();
-      $("."+name).show();
-    }).change();
-  });
-  $(document).ready(function(){
-    $("#Eleventh_Std_School_Name").on("change",function(){
-      var name=$("#Eleventh_Std_School_Name").val();
-      $(".elcventhchoolchange").hide();
-      $("."+name).show();
-    }).change();
-  });
-
-  $(document).ready(function(){
-    $("#Twelfth_Std_School_Name").on("change",function(){
-      var name=$("#Twelfth_Std_School_Name").val();
-      $(".twelthschoolchange").hide();
-      $("."+name).show();
-    }).change();
-  });
-
-
-  $(document).ready(function(){
-    $("#Diploma_apply_for").on("change",function(){
-      var name=$("#Diploma_apply_for").val();
-      $(".hscanddiploma").hide();
-      $("."+name).show();
-    }).change();
-  });
-  function FillAddressInput()
-    {
-       let checkBox= document.getElementById('checkBox');
-
-       let Permanent_Address_Door_No = document.getElementById("Permanent_Address_Door_No");
-       let Permanent_Address_Street_Name = document.getElementById("Permanent_Address_Street_Name");
-       let Permanent_Address_Location = document.getElementById("Permanent_Address_Location");
-       let Permanent_Address_Pincode = document.getElementById("Permanent_Address_Pincode");
-       let Permanent_Address_Taluk = document.getElementById("Permanent_Address_Taluk");
-       let Permanent_Address_District = document.getElementById("Permanent_Address_District");
-       let Permanent_Address_State = document.getElementById("Permanent_Address_State");
-
-       let Communication_Address_Door_No = document.getElementById("Communication_Address_Door_No");
-       let Communication_Address_Street_Name = document.getElementById("Communication_Address_Street_Name");
-       let Communication_Address_Location = document.getElementById("Communication_Address_Location");
-       let Communication_Address_Pincode = document.getElementById("Communication_Address_Pincode");
-       
-       let Communication_Address_Taluk = document.getElementById("Communication_Address_Taluk");
-       let Communication_Address_District = document.getElementById("Communication_Address_District");
-       let Communication_Address_State = document.getElementById("Communication_Address_State");
-
-        if (checkBox.checked == true)
-        {
-
-       let Permanent_Address_Door_NoValue = Permanent_Address_Door_No.value;
-       let Permanent_Address_Street_NameValue = Permanent_Address_Street_Name.value;
-       let Permanent_Address_LocationValue     = Permanent_Address_Location.value;
-       let Permanent_Address_PincodeValue      = Permanent_Address_Pincode.value;
-       let Permanent_Address_TalukValue         = Permanent_Address_Taluk.value;
-       let Permanent_Address_DistrictValue        = Permanent_Address_District.value;
-       let Permanent_Address_StateValue      = Permanent_Address_State.value;
-
-       Communication_Address_Door_No.value = Permanent_Address_Door_NoValue; 
-       Communication_Address_Street_Name.value = Permanent_Address_Street_NameValue;
-       Communication_Address_Location.value     = Permanent_Address_LocationValue;
-       Communication_Address_Pincode.value      = Permanent_Address_PincodeValue;
-       Communication_Address_Taluk.value         = Permanent_Address_TalukValue;
-       Communication_Address_District.value        = Permanent_Address_DistrictValue;
-       Communication_Address_State.value      = Permanent_Address_StateValue;
-
-
-       }
-        else
-        {
-       Communication_Address_Door_No.value = "";
-       Communication_Address_Street_Name.value = "";
-       Communication_Address_Location.value     = "";
-       Communication_Address_Pincode.value      = "";
-       Communication_Address_Taluk.value         = "";
-       Communication_Address_District.value        = "";
-       Communication_Address_State.value      = "";           }
-    }
-
-
-
-    function sslcSum() {
-      // sslc
-      var Tenth_Std_Tamil_Mark = parseInt(document.getElementById("Tenth_Std_Tamil_Mark").value) || 0;
-      var Tenth_Std_English_Mark = parseInt(document.getElementById("Tenth_Std_English_Mark").value) || 0;
-      var Tenth_Std_Maths_Mark = parseInt(document.getElementById("Tenth_Std_Maths_Mark").value) || 0;
-      var Tenth_Std_Science_Mark = parseInt(document.getElementById("Tenth_Std_Science_Mark").value) || 0;
-      var Tenth_Std_SocialScience_Mark = parseInt(document.getElementById("Tenth_Std_SocialScience_Mark").value) || 0;
-      var Tenth_Std_Others_Mark = parseInt(document.getElementById("Tenth_Std_Others_Mark").value) || 0;
-      var Tenth_Std_Total_Mark = (Tenth_Std_Tamil_Mark + Tenth_Std_English_Mark + Tenth_Std_Maths_Mark + Tenth_Std_Science_Mark + Tenth_Std_SocialScience_Mark+ Tenth_Std_Others_Mark) .toFixed(2) ;
-      document.getElementById("Tenth_Std_Total_Mark").value = Tenth_Std_Total_Mark;
-    }
-    function hscacaSum() {
-      // academic
-      var Twelfth_Std_aca_Language_Mark = parseInt(document.getElementById("Twelfth_Std_aca_Language_Mark").value) || 0;
-      var Twelfth_Std_aca_English_Mark = parseInt(document.getElementById("Twelfth_Std_aca_English_Mark").value) || 0;
-      var Twelfth_Std_aca_Mathematics_Mark = parseInt(document.getElementById("Twelfth_Std_aca_Mathematics_Mark").value) || 0;
-      var Twelfth_Std_aca_Physics_Mark = parseInt(document.getElementById("Twelfth_Std_aca_Physics_Mark").value) || 0;
-      var Twelfth_Std_aca_Chemistry_Mark = parseInt(document.getElementById("Twelfth_Std_aca_Chemistry_Mark").value) || 0;
-      var Twelfth_Std_aca_Elective_Mark = parseInt(document.getElementById("Twelfth_Std_aca_Elective_Mark").value) || 0;
-      var Twelfth_Std_aca_Total_Marks = (Twelfth_Std_aca_Language_Mark + Twelfth_Std_aca_English_Mark + Twelfth_Std_aca_Mathematics_Mark + Twelfth_Std_aca_Physics_Mark + Twelfth_Std_aca_Chemistry_Mark + Twelfth_Std_aca_Elective_Mark) .toFixed(2) ;
-      var Twelfth_Std_aca_CUT_OFF_Mark = ( Twelfth_Std_aca_Mathematics_Mark + ((Twelfth_Std_aca_Physics_Mark + Twelfth_Std_aca_Chemistry_Mark)/2)) .toFixed(2) ;
-      var Twelfth_Std_aca_PCM_Average = (( Twelfth_Std_aca_Mathematics_Mark + Twelfth_Std_aca_Physics_Mark + Twelfth_Std_aca_Chemistry_Mark)/3 ) .toFixed(2) ;
-    
-      document.getElementById("Twelfth_Std_aca_Total_Marks").value = Twelfth_Std_aca_Total_Marks;
-      document.getElementById("Twelfth_Std_aca_CUT_OFF_Mark").value = Twelfth_Std_aca_CUT_OFF_Mark;
-      document.getElementById("Twelfth_Std_aca_PCM_Average").value = Twelfth_Std_aca_PCM_Average;
-    }
-    function hscvocSum() {
-      // Fetch input values and convert them to numbers
-      var Twelfth_Std_voc_Language_Mark = parseInt(document.getElementById("Twelfth_Std_voc_Language_Mark").value) || 0;
-      var Twelfth_Std_voc_English_Mark = parseInt(document.getElementById("Twelfth_Std_voc_English_Mark").value) || 0;
-      var Twelfth_Std_voc_chemistry_Mark = parseInt(document.getElementById("Twelfth_Std_voc_chemistry_Mark").value) || 0;
-      var Twelfth_Std_voc_Mathematics_or_Physics_Mark = parseInt(document.getElementById("Twelfth_Std_voc_Mathematics_or_Physics_Mark").value) || 0;
-      var Twelfth_Std_voc_Vocational_Theory_Mark = parseInt(document.getElementById("Twelfth_Std_voc_Vocational_Theory_Mark").value) || 0;
-      var Twelfth_voc_paractical_amrk = parseInt(document.getElementById("Twelfth_voc_paractical_amrk").value) || 0;
-  
-      // Calculate total marks, cutoff, and PCM average
-      var Twelfth_Std_voc_Total_Marks = Twelfth_Std_voc_Language_Mark + Twelfth_Std_voc_English_Mark + Twelfth_Std_voc_chemistry_Mark + Twelfth_Std_voc_Mathematics_or_Physics_Mark + Twelfth_Std_voc_Vocational_Theory_Mark + Twelfth_voc_paractical_amrk;
-      var Twelfth_Std_voc_CUT_OFF_Mark = (Twelfth_Std_voc_chemistry_Mark + ((Twelfth_Std_voc_Mathematics_or_Physics_Mark + Twelfth_Std_voc_Vocational_Theory_Mark) / 2));
-      var Twelfth_Std_voc_PCM_Average = ((Twelfth_Std_voc_chemistry_Mark + Twelfth_Std_voc_Mathematics_or_Physics_Mark + Twelfth_Std_voc_Vocational_Theory_Mark) / 3);
-  
-      // Update the corresponding input fields with the calculated values
-      document.getElementById("Twelfth_Std_voc_Total_Marks").value = Twelfth_Std_voc_Total_Marks;
-      document.getElementById("Twelfth_Std_voc_CUT_OFF_Mark").value = Twelfth_Std_voc_CUT_OFF_Mark.toFixed(2);
-      document.getElementById("Twelfth_Std_voc_PCM_Average").value = Twelfth_Std_voc_PCM_Average.toFixed(2);
-  }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const button1 = document.getElementById("button1");
-      const button2 = document.getElementById("button2");
-      const div1 = document.getElementById("div1");
-      const div2 = document.getElementById("div2");
-      const div4 = document.getElementById("div4");
-      const div5 = document.getElementById("div5");
-
-      button1.addEventListener("click", function () {
-          div1.style.display = "block";
-          div2.style.display = "none";
-          div4.style.display = "block";
-          div5.style.display = "none";
-      });
-
-      button2.addEventListener("click", function () {
-          div1.style.display = "none";
-          div2.style.display = "block";
-          div4.style.display = "none";
-          div5.style.display = "block";
-      });
-  });
-  function dipcalculation() {
-    // SSLC
-    var sem1_total_mark = parseInt(document.getElementById("sem1_total_mark").value) || 0;
-    var sem2_total_mark = parseInt(document.getElementById("sem2_total_mark").value) || 0;
-    var sem3_total_mark = parseInt(document.getElementById("sem3_total_mark").value) || 0;
-    var sem4_total_mark = parseInt(document.getElementById("sem4_total_mark").value) || 0;
-    var sem5_total_mark = parseInt(document.getElementById("sem5_total_mark").value) || 0;
-    var sem6_total_mark = parseInt(document.getElementById("sem6_total_mark").value) || 0;
-
-    // Average
-    var sem1_obtain_mark = parseFloat(document.getElementById("sem1_obtain_mark").value) || 0;
-    var sem2_obtain_mark = parseFloat(document.getElementById("sem2_obtain_mark").value) || 0;
-    var sem3_obtain_mark = parseFloat(document.getElementById("sem3_obtain_mark").value) || 0;
-    var sem4_obtain_mark = parseFloat(document.getElementById("sem4_obtain_mark").value) || 0;
-    var sem5_obtain_mark = parseFloat(document.getElementById("sem5_obtain_mark").value) || 0;
-    var sem6_obtain_mark = parseFloat(document.getElementById("sem6_obtain_mark").value) || 0;
-
-    var diploma_obtain_mark = (sem1_total_mark + sem2_total_mark + sem3_total_mark + sem4_total_mark + sem5_total_mark + sem6_total_mark);
-    var diploma_total_mark = (sem1_obtain_mark + sem2_obtain_mark + sem3_obtain_mark + sem4_obtain_mark + sem5_obtain_mark + sem6_obtain_mark);
-    var total_percentages = (diploma_total_mark / diploma_obtain_mark)*100;
-
-    document.getElementById("diploma_obtain_mark").value = diploma_obtain_mark;
-    document.getElementById("diploma_total_mark").value = diploma_total_mark;
-    document.getElementById("total_percentages").value = total_percentages;
-}
-  
-function confirmDelete() {
-    // Display a confirmation dialog
-    var result = confirm("Are you sure you want to delete?");
-    
-    // Return true if the user clicks OK, otherwise return false
-    return result;
-}
-
-function confirmSubmit() {
-  // Display a confirmation dialog
-  var result = confirm("Are you sure you want to Submit the Form?");
-  
-  // Return true if the user clicks OK, otherwise return false
-  return result;
-}
-
-function hideButton() {
-  // Check if the page is being shown due to a back-forward navigation
-  if (window.performance && window.performance.navigation.type === 2) {
-      // If a back-forward navigation, hide the button
-      document.getElementById('submitButton').style.display = 'none';
-  } else {
-      // If not a back-forward navigation, show the button
-      document.getElementById('submitButton').style.display = 'block';
-  }
-}
-
-// Attach the hideButton function to the pageshow event
-window.addEventListener('pageshow', hideButton);
-
-
-$(document).ready(function() {
-  // Event listener for changes in any preference select box
-  $('.preference-select').change(function() {
-      // Get the selected value
-      var selectedValue = $(this).val();
-      
-      // Disable the selected value in all other preference select boxes
-      $('.preference-select').not(this).find('option[value="' + selectedValue + '"]').prop('disabled', true);
-      
-      // Enable all options in the current select box
-      $(this).find('option').prop('disabled', false);
+$(function() { 
+  $('#sidebarCollapse').on('click', function() {
+    $('#sidebar, #content').toggleClass('active');
   });
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('file');
+    const fileUploadLabel = document.getElementById('fileUploadLabel');
+    const filenameDisplay = document.getElementById('filename');
+
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            filenameDisplay.textContent = 'Selected file: ' + fileInput.files[0].name;
+            fileUploadLabel.style.backgroundImage = 'url("sample-image.jpg")';
+            fileUploadLabel.style.c = 'url("sample-image.jpg")';
+        } else {
+            filenameDisplay.textContent = '';
+            fileUploadLabel.style.backgroundImage = 'none';
+        }
+    });
+});
+
+// const form = document.querySelector("form"),
+//         nextBtn = form.querySelector(".nextBtn"),
+//         backBtn = form.querySelector(".backBtn"),
+//         allInput = form.querySelectorAll(".first input");
+
+
+// nextBtn.addEventListener("click", ()=> {
+//     allInput.forEach(input => {
+//         if(input.value != ""){
+//             form.classList.add('secActive');
+//         }else{
+//             form.classList.remove('secActive');
+//         }
+//     })
+// })
+
+// 
+// -----------------------------------------------table --------------------------------
+/**
+Responsive HTML Table With Pure CSS - Web Design/UI Design
+
+Code written by:
+👨🏻‍⚕️ @Coding Design (Jeet Saru)
+
+> You can do whatever you want with the code. However if you love my content, you can **SUBSCRIBED** my YouTube Channel.
+
+🌎link: www.youtube.com/codingdesign 
+*/
+
+const search = document.querySelector('.input-group input'),
+    table_rows = document.querySelectorAll('tbody tr'),
+    table_headings = document.querySelectorAll('thead th');
+
+// 1. Searching for specific data of HTML table
+search.addEventListener('input', searchTable);
+
+function searchTable() {
+    table_rows.forEach((row, i) => {
+        let table_data = row.textContent.toLowerCase(),
+            search_data = search.value.toLowerCase();
+
+        row.classList.toggle('hide', table_data.indexOf(search_data) < 0);
+        row.style.setProperty('--delay', i / 25 + 's');
+    })
+
+    document.querySelectorAll('tbody tr:not(.hide)').forEach((visible_row, i) => {
+        visible_row.style.backgroundColor = (i % 2 == 0) ? 'transparent' : '#0000000b';
+    });
+}
+
+// 2. Sorting | Ordering data of HTML table
+
+table_headings.forEach((head, i) => {
+    let sort_asc = true;
+    head.onclick = () => {
+        table_headings.forEach(head => head.classList.remove('active'));
+        head.classList.add('active');
+
+        document.querySelectorAll('td').forEach(td => td.classList.remove('active'));
+        table_rows.forEach(row => {
+            row.querySelectorAll('td')[i].classList.add('active');
+        })
+
+        head.classList.toggle('asc', sort_asc);
+        sort_asc = head.classList.contains('asc') ? false : true;
+
+        sortTable(i, sort_asc);
+    }
+})
+
+
+function sortTable(column, sort_asc) {
+    [...table_rows].sort((a, b) => {
+        let first_row = a.querySelectorAll('td')[column].textContent.toLowerCase(),
+            second_row = b.querySelectorAll('td')[column].textContent.toLowerCase();
+
+        return sort_asc ? (first_row < second_row ? 1 : -1) : (first_row < second_row ? -1 : 1);
+    })
+        .map(sorted_row => document.querySelector('tbody').appendChild(sorted_row));
+}
+
+// 3. Converting HTML table to PDF
+
+const pdf_btn = document.querySelector('#toPDF');
+const customers_table = document.querySelector('#customers_table');
+
+
+const toPDF = function (customers_table) {
+    const html_code = `
+    <!DOCTYPE html>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <main class="table" id="customers_table">${customers_table.innerHTML}</main>`;
+
+    const new_window = window.open();
+     new_window.document.write(html_code);
+
+    setTimeout(() => {
+        new_window.print();
+        new_window.close();
+    }, 400);
+}
+
+pdf_btn.onclick = () => {
+    toPDF(customers_table);
+}
+
+// 4. Converting HTML table to JSON
+
+const json_btn = document.querySelector('#toJSON');
+
+const toJSON = function (table) {
+    let table_data = [],
+        t_head = [],
+
+        t_headings = table.querySelectorAll('th'),
+        t_rows = table.querySelectorAll('tbody tr');
+
+    for (let t_heading of t_headings) {
+        let actual_head = t_heading.textContent.trim().split(' ');
+
+        t_head.push(actual_head.splice(0, actual_head.length - 1).join(' ').toLowerCase());
+    }
+
+    t_rows.forEach(row => {
+        const row_object = {},
+            t_cells = row.querySelectorAll('td');
+
+        t_cells.forEach((t_cell, cell_index) => {
+            const img = t_cell.querySelector('img');
+            if (img) {
+                row_object['customer image'] = decodeURIComponent(img.src);
+            }
+            row_object[t_head[cell_index]] = t_cell.textContent.trim();
+        })
+        table_data.push(row_object);
+    })
+
+    return JSON.stringify(table_data, null, 4);
+}
+
+json_btn.onclick = () => {
+    const json = toJSON(customers_table);
+    downloadFile(json, 'json')
+}
+
+// 5. Converting HTML table to CSV File
+
+const csv_btn = document.querySelector('#toCSV');
+
+const toCSV = function (table) {
+    // Code For SIMPLE TABLE
+    // const t_rows = table.querySelectorAll('tr');
+    // return [...t_rows].map(row => {
+    //     const cells = row.querySelectorAll('th, td');
+    //     return [...cells].map(cell => cell.textContent.trim()).join(',');
+    // }).join('\n');
+
+    const t_heads = table.querySelectorAll('th'),
+        tbody_rows = table.querySelectorAll('tbody tr');
+
+    const headings = [...t_heads].map(head => {
+        let actual_head = head.textContent.trim().split(' ');
+        return actual_head.splice(0, actual_head.length - 1).join(' ').toLowerCase();
+    }).join(',') + ',' + 'image name';
+
+    const table_data = [...tbody_rows].map(row => {
+        const cells = row.querySelectorAll('td'),
+            img = decodeURIComponent(row.querySelector('img').src),
+            data_without_img = [...cells].map(cell => cell.textContent.replace(/,/g, ".").trim()).join(',');
+
+        return data_without_img + ',' + img;
+    }).join('\n');
+
+    return headings + '\n' + table_data;
+}
+
+csv_btn.onclick = () => {
+    const csv = toCSV(customers_table);
+    downloadFile(csv, 'csv', 'customer orders');
+}
+
+// 6. Converting HTML table to EXCEL File
+
+const excel_btn = document.querySelector('#toEXCEL');
+
+const toExcel = function (table) {
+    // Code For SIMPLE TABLE
+    // const t_rows = table.querySelectorAll('tr');
+    // return [...t_rows].map(row => {
+    //     const cells = row.querySelectorAll('th, td');
+    //     return [...cells].map(cell => cell.textContent.trim()).join('\t');
+    // }).join('\n');
+
+    const t_heads = table.querySelectorAll('th'),
+        tbody_rows = table.querySelectorAll('tbody tr');
+
+    const headings = [...t_heads].map(head => {
+        let actual_head = head.textContent.trim().split(' ');
+        return actual_head.splice(0, actual_head.length - 1).join(' ').toLowerCase();
+    }).join('\t') + '\t' + 'image name';
+
+    const table_data = [...tbody_rows].map(row => {
+        const cells = row.querySelectorAll('td'),
+            img = decodeURIComponent(row.querySelector('img').src),
+            data_without_img = [...cells].map(cell => cell.textContent.trim()).join('\t');
+
+        return data_without_img + '\t' + img;
+    }).join('\n');
+
+    return headings + '\n' + table_data;
+}
+
+excel_btn.onclick = () => {
+    const excel = toExcel(customers_table);
+    downloadFile(excel, 'excel');
+}
+
+const downloadFile = function (data, fileType, fileName = '') {
+    const a = document.createElement('a');
+    a.download = fileName;
+    const mime_types = {
+        'json': 'application/json',
+        'csv': 'text/csv',
+        'excel': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    }
+    a.href = `
+        data:${mime_types[fileType]};charset=utf-8,${encodeURIComponent(data)}
+    `;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+const section = document.querySelector("section"),
+        overlay = document.querySelector(".overlay"),
+        showBtn = document.querySelector(".show-modal"),
+        closeBtn = document.querySelector(".close-btn");
+
+      showBtn.addEventListener("click", () => section.classList.add("active"));
+
+      overlay.addEventListener("click", () =>
+        section.classList.remove("active")
+      );
+
+      closeBtn.addEventListener("click", () =>
+        section.classList.remove("active")
+      );
+//---------------------------------------------------------------   
+
+document.addEventListener('DOMContentLoaded', function() {
+        var fromDateInput = document.getElementById('fromdate');
+        var toDateInput = document.getElementById('todate');
+        console.log('---------function working')
+        // Get today's date in YYYY-MM-DD format
+        var today = new Date();
+        var day = String(today.getDate()).padStart(2, '0');
+        var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        var year = today.getFullYear();
+
+        today = year + '-' + month + '-' + day;
+
+        // Set the min attribute of the fromdate input to today's date
+        fromDateInput.setAttribute('min', today);
+
+        // Add event listener to fromdate input to update todate input min attribute
+        fromDateInput.addEventListener('change', function() {
+            var fromDate = fromDateInput.value;
+            toDateInput.setAttribute('min', fromDate);
+        });
+    });

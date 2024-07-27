@@ -27,38 +27,53 @@
 <div class="rit"></div>
 <img src="{% static 'images/rit.jpg' %}" alt="">
 <!-- Page content holder -->
-<div class="page-content p-5 " id="content">
+<div class="page-content p-5" id="content">
     <div class="rit"></div>
     <div class="container">
-
-    <div class="heading"><center><h1>RIT CGPA Tracking</h1></center></div>
-
-    <div class="row card-row" style="margin-top: 20px; margin-left: 350px;">
-        <div class=" col-md-6">
-            <a href="{% url 'student'  %}" class="card-link">
-                <div class="card" style="background-color: 005073;">
-                    <div class="card-body">
-                        <span ><center>Student Form</center></span>
-                    </div>
-                </div>
-            </a>
-        </div>
-       
-    </div>
-    <div class="row " style="margin-top: 20px; margin-left: 350px;">
-        <div class="col-md-6 ">
-            <a href="{%url 'login' %}"  class="card-link">
-                <div class="card" style="background-color: 005073;">
-                    <div class="card-body">
-                        <span ><center>HOD login</center></span>
-                    </div>
-                </div>
-            </a>
+        <div class="heading">
+            <center><h1>RIT CGPA Tracking</h1></center>
         </div>
 
+        <div class="row card-row" style="margin-top: 20px; margin-left: 350px;">
+            <div class="col-md-6">
+                <a href="{% url 'student' %}?role=student" class="card-link" id="student-btn">
+                    <div class="card" style="background-color: #005073;">
+                        <div class="card-body">
+                            <span><center>Student Form</center></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px; margin-left: 350px;">
+            <div class="col-md-6">
+                <a href="{% url 'login' %}" class="card-link" id="staff-btn">
+                    <div class="card" style="background-color: #005073;">
+                        <div class="card-body">
+                            <span><center>Staff Login</center></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
+</div>
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-   
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Function to handle student button click
+            document.getElementById('student-btn').addEventListener('click', () => {
+                sessionStorage.setItem('userRole', 'student');
+                
+            });
+
+            // Function to handle staff button click
+            document.getElementById('staff-btn').addEventListener('click', () => {
+                sessionStorage.setItem('userRole', 'staff');
+            });
+        });
+    </script>
 </div>
 </body>
 

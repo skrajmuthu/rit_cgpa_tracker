@@ -23,38 +23,55 @@
 <!-- End vertical navbar -->
 {% block maincontent %}
 <div class="rit"></div>
-<img src="{% static 'images/rit.jpg' %}" alt="">
+
+
 <!-- Page content holder -->
 <div class="page-content p-5 " id="content">
   <!-- Toggle button -->
- <a href="" hidden id="django-message">{{message|default:0}}</a>
-
+  <div class="sidebarCollapse">
+    <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
+    <a href="" hidden id="django-message">{{message|default:0}}</a>
+</div>
+<div class="title">
+    <h2 class="display-5" style="margin-bottom: .9rem;">CGPA Table</h2>
+    
+</div>
   <div class="row ">
   <div class="container">
     <header>Registration</header>
+    
+    
+    <input type="hidden" id="role" value="{{ role }}" >
 
-    <form method="POST" action="{% url 'student'  %}" autocomplete="off" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form first">
-            <div class="details personal">
-                <span class="title">CGPA Tracking</span>
-                <div class="fields">
-                    <div class="input-field">
-                        <label>Reg No</label>
-                        <input type="number" id="reg_no" name="reg_no" placeholder="Enter Reg No" required>
+        <form id="roleForm" method="POST" action="{% url 'student' %}" autocomplete="off" enctype="multipart/form-data" onsubmit="submitForm(); return false;">
+            {% csrf_token %}
+            <div class="form first">
+                <div class="details personal">
+                    <span class="title">CGPA Tracking</span>
+                    <div class="fields">
+                        <div class="input-field">
+                            <label>Reg No</label>
+                            <input type="number" id="reg_no" name="reg_no" placeholder="Enter Reg No" required>
+                        </div>
                     </div>
-               
+                    <button type="submit" class="nextBtn">
+                        <span class="btnText">NEXT</span>
+                        <i class="uil uil-navigator"></i>
+                    </button>
+                </div>
             </div>
-            <button type="submit" class="nextBtn">
-                <span class="btnText">NEXT</span>
-                <i class="uil uil-navigator"></i>
-            </button>
-        </div>
-        </div>
-    </form>
+        </form>
 </div>
 </div>
 </div>
+<script>
+    function submitForm() {
+        const form = document.getElementById('roleForm');
+        const role = document.getElementById('role').value;
+        form.action = "{% url 'student' %}?role=" + role;
+        form.submit();
+    }
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Get the message from the DOM

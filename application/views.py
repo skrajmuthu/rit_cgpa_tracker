@@ -16,6 +16,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 import json
+from django.urls import reverse
 from django.http import FileResponse
 from django.contrib import messages
 
@@ -62,6 +63,7 @@ def signup(request):
 
 def login(request):
     if request.method == 'POST':
+        
         email = request.POST.get('email')
         password = request.POST.get('password')
 
@@ -74,9 +76,14 @@ def login(request):
 
         # Check if the password matches
         if user.Password == encrypt_password(password):
+            request.session['user_auth'] = True
+            request.session['login_role'] = 'teacher'
             request.session['user']={"username":user.user_name,'email':email}
-
-            return redirect('dashboard')
+            role = 'teacher'
+            base_url = reverse('dashboard')  # Get the base URL for the 'dashboard' view
+            query_string = f'?role={role}'  # Construct the query string
+            url = base_url + query_string  # Combine the base URL and query string
+            return redirect(url)
         else:
             # Passwords don't match, show an error message
             error_message = 'Invalid username or password.'
@@ -88,25 +95,38 @@ def login(request):
 def index(request):
     return render(request, 'index.html')
 
+def student_view():
+    pass
 
 def student(request):
+    role = request.GET.get('role')
     current_year = datetime.now().year
     batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
     if request.method == 'POST':
+        print('***************posted')
+        print('_________############################',request.session.get('user_auth'),role)
         reg_no = request.POST.get('reg_no')
         data = Student.objects.filter(reg_no=reg_no)
-        role =request.session.get('user')['username']
-        role=''
-        print('------------------------------',role)
         if data:
+            
             reg_value = get_object_or_404(Student, reg_no=reg_no)
-            if role != '':
-                return render(request, 'update.html',{"reg_value":reg_value,"batch_years":batch_years,})
+            if role == 'teacher' and request.session.get('user_auth') :
+                return render(request, 'update.html',{"reg_value":reg_value,"batch_years":batch_years,'role':role})
+            elif role == 'student':
+                # print('_________############################',request.session.get('user_auth'),role)
+                return render(request, 'student_view.html',{"reg_value":reg_value,"batch_years":batch_years,'role':role})
             else:
-                return render(request, 'student_view.html',{"reg_value":reg_value,"batch_years":batch_years})
-        if role != '':
-            return render(request, 'add.html',{"reg_no":reg_no,"batch_years":batch_years})
-    return render(request, 'student.html')
+                return redirect('login')
+        if role == 'teacher' and request.session.get('user_auth'):
+            return render(request, 'add.html',{"reg_no":reg_no,"batch_years":batch_years,'role':role})
+        else:
+            return render(request, 'student.html',{'role':role})
+    if  role == 'student':
+        return render(request, 'student.html',{'role':role})
+    elif role == 'teacher' and request.session.get('user_auth'):
+        return render(request, 'student.html',{'role':role})
+    else:
+        return redirect('login')
 
 
 def insert_grade(request):
@@ -174,37 +194,43 @@ def insert_grade(request):
 from datetime import datetime
 
 def dashboard(request):
-    user=request.session.get('user', {})
-    user_name=user['username']
-    current_year = datetime.now().year
-    batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
-    user = request.session.get('email')
-    data = Student.objects.all()
-    print(user_name)
+    role = request.GET.get('role')
+    print('---------------------dashboad',role)
+    if role == 'teacher' and request.session.get('user_auth'):
+        user=request.session.get('user', {})
+        user_name=user['username']
+        current_year = datetime.now().year
+        batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
+        user = request.session.get('email')
+        data = Student.objects.all()
+        print(user_name)
 
-    if request.method == 'POST':
-        cgpa = request.POST.get('cgpa')
-        no_of_arrear = request.POST.get('no_of_arrear')
-        bag_of_log = request.POST.get('bag_of_log')
-        batch = request.POST.get('batch')
-        print(bag_of_log,batch)
-        # Initialize filters
-        filters = {}
+        if request.method == 'POST':
+            cgpa = request.POST.get('cgpa')
+            no_of_arrear = request.POST.get('no_of_arrear')
+            bag_of_log = request.POST.get('bag_of_log')
+            batch = request.POST.get('batch')
+            print(bag_of_log,batch)
+            # Initialize filters
+            filters = {}
 
-        if cgpa:
-            filters['cgpa__gte'] = float(cgpa)
-        if no_of_arrear:
-            filters['no_of_arrear__lte'] = int(no_of_arrear)
-        if batch:
-            filters['batch'] = batch
-        if bag_of_log !='Yes & No':
-            filters['bag_of_log'] = bag_of_log
+            if cgpa:
+                filters['cgpa__gte'] = float(cgpa)
+            if no_of_arrear:
+                filters['no_of_arrear__lte'] = int(no_of_arrear)
+            if batch:
+                filters['batch'] = batch
+            if bag_of_log !='Yes & No':
+                filters['bag_of_log'] = bag_of_log
 
-        # Apply filters to the queryset
-        data = Student.objects.filter(**filters)
-        print(data)
-        return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data})
-    return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data})
+            # Apply filters to the queryset
+            data = Student.objects.filter(**filters)
+            print(data)
+            return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role})
+        return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role})
+    else:
+        return redirect('login')
+    
 
 def download_excel(request):
     # Define the path to the file
@@ -265,3 +291,7 @@ def upload_cgpa(request):
         return render(request, 'hod/dashboard.html',{"data":data,'message':"Data successfully added/updated."})
 
     return render(request, 'hod/dashboard.html',{"data":data})
+
+def logout (request):
+    request.session.flush()
+    return redirect('index')

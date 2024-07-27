@@ -31,5 +31,7 @@ urlpatterns = [
     path('signup', views.signup, name="signup"),
     path('download/', views.download_excel, name='download_excel'),
     path('upload/', views.upload_cgpa, name='upload_cgpa'),
+    path('logout/', views.logout, name='logout'),
+    
 
 ]

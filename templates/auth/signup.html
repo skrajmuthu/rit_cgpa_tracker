@@ -2,17 +2,27 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <!DOCTYPE html>
 <html lang="en">
+    {% block header %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Ramco Institute of Technology</title>
+    <style>
+        body {background-image: url({% static 'images/background.jpg' %});
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+    </style>
 
 <body>
-    {% block header %}
+    
 
     <div class="rit"></div>
-
+    <img src="{% static 'images/rit.jpg' %}" alt="">
+    <br>
+    <br>
     <div class="container">
         <div class="heading"></div>
         <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data"  onsubmit="hideButton()">

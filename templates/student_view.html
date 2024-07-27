@@ -1,4 +1,6 @@
 
+{% extends "base.html" %}
+
 <!DOCTYPE html>
 {% load static %}
 <html>
@@ -21,14 +23,18 @@
  
 <!-- End vertical navbar -->
 {% block maincontent %}
-<div class="rit"></div>
-<img src="{% static 'images/rit.jpg' %}" alt="">
-<!-- Page content holder -->
 <div class="page-content p-5 " id="content">
   <!-- Toggle button -->
-
+  <div class="sidebarCollapse">
+    <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
+    <a href="" hidden id="django-message">{{message|default:0}}</a>
+</div>
+<div class="title">
+    <h2 class="display-5" style="margin-bottom: .9rem;">CGPA Table</h2>
+    
+</div>
   <div class="row ">
-    <div class="container">
+  <div class="container">
       <center><h4>Current Student ID : {{ reg_value.reg_no }}</h4></center>
       
       <header>Registration</header>
