@@ -14,6 +14,12 @@
                 background-repeat: no-repeat;
                 background-attachment: fixed;
             }
+        #department-group.hidden {
+            display: none;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
     </style>
 
 <body>
@@ -25,85 +31,134 @@
     <br>
     <div class="container">
         <div class="heading"></div>
-        <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data"  onsubmit="hideButton()">
-        {% csrf_token %}
+        <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data" onsubmit="hideButton()">
+            {% csrf_token %}
             <div class="form-all">
                 <div class="admission">
-                <span class="title"><b>ADMISSION</b></span>
-<!--            
-            <div class="PERSONALINFORMATION">
-                <span class="title"><b>I. PERSONAL INFORMATION</b></span> -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input1">Name</label>
-                        <input type="text" name="Name" id="Name" class="form-control" placeholder="Enter the name" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input2">User Name</label>
-                        <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Enter user_name"
-                        required>                    
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input2">Department</label>
-                        <select name="Department" class="form-control"  required>
-                            <option  value="" disabled selected>Select</option>
-                                <option value="B.TECH AD">AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
-                                <option value="B.E CIVIL">CE-CIVIL ENGINEERING</option>
-                                <option value="B.TECH CSBS">CB-COMPUTER SCIENCE AND BUSINESS SYSTEM</option>
-                                <option value="B.E CSE">CS-COMPUTER SCIENCE AND ENGINEERING</option>
-                                <option value="B.E EEE">EE-ELECRICAL AND ELECTRONICS ENGINEERING</option>
-                                <option value="B.E ECE">EC-ELECTRONICS AND COMMUNICATION ENGINEERING</option>
-                                <option value="B.TECH IT">IT-INFORMATION TECHNOLOGY</option>
-                                <option value="B.E MECH">ME-MECHANICAL ENGINEERING</option>
-                                <option value="Transpoart">Transpoart</option>
-                                <option value="office">office</option>
-                                <option value="Hostel">Hostel</option>
-                            </select>
-
-                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input1">Email-ID</label>
-                        <input type="email" name="email" class="form-control" placeholder="Enter email" required/>
-
+                    <span class="title"><b>ADMISSION</b></span>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="input1">Name</label>
+                                <input type="text" name="Name" id="Name" class="form-control" placeholder="Enter the name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="input2">User Name</label>
+                                <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Enter user_name" required>                    
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="input1">Email-ID</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter email" required/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="input1">Password</label>
+                                <input type="Password" name="Password" class="form-control" placeholder="Enter Password'" required/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="input2">Confirm Password</label>
+                                <input type="Password" name="conform_Password" class="form-control" placeholder="Enter confirm_Password" required/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select name="role" id="role" class="form-control" required>
+                                    <option value="" disabled selected>Select Role</option>
+                                    <option value="staff">Teaching Staff</option>
+                                    <option value="GM">GM</option>
+                                    <option value="Principal/vice_principal">Principal / Vice Principal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group" id="department-group">
+                                <label for="Department">Department</label>
+                                <select name="Department" id="department" class="form-control" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="B.TECH AD">AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
+                                    <option value="B.E CIVIL">CE-CIVIL ENGINEERING</option>
+                                    <option value="B.TECH CSBS">CB-COMPUTER SCIENCE AND BUSINESS SYSTEM</option>
+                                    <option value="B.E CSE">CS-COMPUTER SCIENCE AND ENGINEERING</option>
+                                    <option value="B.E EEE">EE-ELECTRICAL AND ELECTRONICS ENGINEERING</option>
+                                    <option value="B.E ECE">EC-ELECTRONICS AND COMMUNICATION ENGINEERING</option>
+                                    <option value="B.TECH IT">IT-INFORMATION TECHNOLOGY</option>
+                                    <option value="B.E MECH">ME-MECHANICAL ENGINEERING</option>
+                                </select>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-         
-            <div class="row">
-                
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input1">Password</label>
-                        <input type="Password" name="Password" class="form-control" placeholder="Enter Password'" required/>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input2">Conform Password</label>
-                        <input type="Password" name="conform_Password" class="form-control" placeholder="Enter conform_Password" required/>
-                    </div>
-                </div>
-
+            <div class="but" style="margin-left: 850px;">
+                <button type="submit" id="" class="btn btn-primary">Register</button>
             </div>
-
-
-        </div>
-        </div>
-        <div class="but" style="margin-left: 850px;">
-            <button type="submit"  id="" class="btn btn-primary">Register</button>
         </form>
             
         </div>
     </div>
-
+    <script>
+        document.getElementById('role').addEventListener('change', function() {
+            var role = this.value;
+            var departmentGroup = document.getElementById('department-group');
+            var department = document.getElementById('department');
+    
+            if (role === 'staff') {
+                departmentGroup.style.display = 'block';
+                department.required = true;
+                
+                // Remove 'all' option if it exists
+                var allOption = department.querySelector('option[value="All"]');
+                if (allOption) {
+                    department.removeChild(allOption);
+                }
+            } else {
+                departmentGroup.style.display = 'none';
+                department.required = false;
+    
+                // Add 'all' option if it doesn't exist
+                var allOption = department.querySelector('option[value="All"]');
+                if (!allOption) {
+                    var option = document.createElement('option');
+                    option.value = 'All';
+                    option.text = 'All';
+                    department.appendChild(option);
+                }
+    
+                department.value = 'All'; // Set default value to 'all' for non-staff roles
+            }
+        });
+    
+        // Initial check to set the department field based on the default selected role
+        document.getElementById('role').dispatchEvent(new Event('change'));
+    </script>
+    <!-- <script>
+        document.getElementById('role').addEventListener('change', function() {
+            var role = this.value;
+            var departmentGroup = document.getElementById('department-group');
+            var department = document.getElementById('department');
+    
+            if (role === 'staff') {
+                departmentGroup.style.display = 'block';
+                department.required = true;
+            } else {
+                departmentGroup.style.display = 'none';
+                department.value = 'B.TECH AD'; // Default value for non-staff roles
+                department.required = false;
+            }
+        });
+    
+        // Initial check to set the department field based on the default selected role
+        document.getElementById('role').dispatchEvent(new Event('change'));
+    </script> -->
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

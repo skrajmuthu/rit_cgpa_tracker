@@ -32,11 +32,10 @@ def encrypt_password(raw_password):
 
 def signup(request):
     if request.method == 'POST':
-        form = userform(request.POST)
+        form = userform(request.POST)   
         if form.is_valid():
             password = form.cleaned_data['Password']
             confirm_password = form.cleaned_data['conform_Password']
-
             if password == confirm_password:
                 encrypted_password = encrypt_password(password)
 
@@ -78,7 +77,7 @@ def login(request):
         if user.Password == encrypt_password(password):
             request.session['user_auth'] = True
             request.session['login_role'] = 'teacher'
-            request.session['user']={"username":user.user_name,'email':email}
+            request.session['user']={"username":user.user_name,'email':email,'deportment':user.Department}
             role = 'teacher'
             base_url = reverse('dashboard')  # Get the base URL for the 'dashboard' view
             query_string = f'?role={role}'  # Construct the query string
@@ -95,36 +94,36 @@ def login(request):
 def index(request):
     return render(request, 'index.html')
 
-def student_view():
-    pass
+
 
 def student(request):
     role = request.GET.get('role')
     current_year = datetime.now().year
     batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
+    try:
+        teacher_role = request.session.get('user')['deportment']
+    except TypeError:
+        teacher_role = None
     if request.method == 'POST':
-        print('***************posted')
-        print('_________############################',request.session.get('user_auth'),role)
         reg_no = request.POST.get('reg_no')
         data = Student.objects.filter(reg_no=reg_no)
         if data:
             
             reg_value = get_object_or_404(Student, reg_no=reg_no)
             if role == 'teacher' and request.session.get('user_auth') :
-                return render(request, 'update.html',{"reg_value":reg_value,"batch_years":batch_years,'role':role})
+                return render(request, 'update.html',{"reg_value":reg_value,"batch_years":batch_years,'role':role,'teacher_role':teacher_role})
             elif role == 'student':
-                # print('_________############################',request.session.get('user_auth'),role)
-                return render(request, 'student_view.html',{"reg_value":reg_value,"batch_years":batch_years,'role':role})
+                return render(request, 'student_view.html',{"reg_value":reg_value,"batch_years":batch_years,'role':role,'teacher_role':teacher_role})
             else:
                 return redirect('login')
         if role == 'teacher' and request.session.get('user_auth'):
-            return render(request, 'add.html',{"reg_no":reg_no,"batch_years":batch_years,'role':role})
+            return render(request, 'add.html',{"reg_no":reg_no,"batch_years":batch_years,'role':role,'teacher_role':teacher_role})
         else:
-            return render(request, 'student.html',{'role':role})
+            return render(request, 'student.html',{'role':role,'teacher_role':teacher_role})
     if  role == 'student':
-        return render(request, 'student.html',{'role':role})
+        return render(request, 'student.html',{'role':role,'teacher_role':teacher_role})
     elif role == 'teacher' and request.session.get('user_auth'):
-        return render(request, 'student.html',{'role':role})
+        return render(request, 'student.html',{'role':role,'teacher_role':teacher_role})
     else:
         return redirect('login')
 
@@ -195,27 +194,31 @@ from datetime import datetime
 
 def dashboard(request):
     role = request.GET.get('role')
-    print('---------------------dashboad',role)
     if role == 'teacher' and request.session.get('user_auth'):
         user=request.session.get('user', {})
         user_name=user['username']
         current_year = datetime.now().year
         batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
         user = request.session.get('email')
-        data = Student.objects.all()
-        print(user_name)
+        teacher_role = request.session.get('user')['deportment']
+        try:
+            data = Student.objects.all() if teacher_role == 'All' else Student.objects.filter(department=teacher_role)
+        except Student.DoesNotExist:
+            data = None 
 
         if request.method == 'POST':
             cgpa = request.POST.get('cgpa')
+            department =request.POST.get('department')
             no_of_arrear = request.POST.get('no_of_arrear')
             bag_of_log = request.POST.get('bag_of_log')
             batch = request.POST.get('batch')
-            print(bag_of_log,batch)
             # Initialize filters
             filters = {}
 
             if cgpa:
                 filters['cgpa__gte'] = float(cgpa)
+            if department:
+                filters['department'] =department
             if no_of_arrear:
                 filters['no_of_arrear__lte'] = int(no_of_arrear)
             if batch:
@@ -225,9 +228,8 @@ def dashboard(request):
 
             # Apply filters to the queryset
             data = Student.objects.filter(**filters)
-            print(data)
-            return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role})
-        return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role})
+            return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
+        return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
     else:
         return redirect('login')
     
@@ -242,6 +244,7 @@ def download_excel(request):
 
 def upload_cgpa(request):
     data = Student.objects.all()
+    teacher_role = request.session.get('user')['deportment']
     if request.method == 'POST':
         excel_file = request.FILES['file']
 
@@ -288,9 +291,9 @@ def upload_cgpa(request):
             )
 
         messages.success(request, 'Student data uploaded successfully!')
-        return render(request, 'hod/dashboard.html',{"data":data,'message':"Data successfully added/updated."})
+        return render(request, 'hod/dashboard.html',{"data":data,'message':"Data successfully added/updated.",'teacher_role':teacher_role})
 
-    return render(request, 'hod/dashboard.html',{"data":data})
+    return render(request, 'hod/dashboard.html',{"data":data,'teacher_role':teacher_role})
 
 def logout (request):
     request.session.flush()

@@ -12,7 +12,4 @@ class Student_form(forms.ModelForm):
 class userform(forms.ModelForm):
     class Meta:
         model = User
-        fields = [
-            'Name', 'user_name',  'Department', 'email',
-            'Password', 'conform_Password'
- ]
+        fields ='__all__'

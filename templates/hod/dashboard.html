@@ -29,9 +29,8 @@
         <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
         <a href="" hidden id="django-message">{{message|default:0}}</a>
     </div>
-    
     <hr>
-    <div class="file_up_down" style="display: flex;">
+    <div class="file_up_down" id='file_up_down' style="display: flex;">
         <a href="{% url 'download_excel' %}">
         <button type="submit" class="nextBtn">
             <span class="btnText">Sample formate excel</span>
@@ -65,6 +64,20 @@
                             <div class="availability-input-field">
                                 <label>CGPA </label>
                                 <input type="text" id="cgpa" name="cgpa" value="{% if cgpa %}{{ cgpa }}{% endif %}" placeholder="Enter cgpa" required>
+                            </div>
+                            <div class="availability-input-field">
+                                <label>Department</label>
+                                <select id="department" name="department" class="form-control" required>
+                                    <option value="" disabled selected>Select Department</option>
+                                    <option value="B.TECH AD">AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
+                                    <option value="B.E CIVIL">CE-CIVIL ENGINEERING</option>
+                                    <option value="B.TECH CSBS">CB-COMPUTER SCIENCE AND BUSINESS SYSTEM</option>
+                                    <option value="B.E CSE">CS-COMPUTER SCIENCE AND ENGINEERING</option>
+                                    <option value="B.E EEE">EE-ELECTRICAL AND ELECTRONICS ENGINEERING</option>
+                                    <option value="B.E ECE">EC-ELECTRONICS AND COMMUNICATION ENGINEERING</option>
+                                    <option value="B.TECH IT">IT-INFORMATION TECHNOLOGY</option>
+                                    <option value="B.E MECH">ME-MECHANICAL ENGINEERING</option>
+                                </select>
                             </div>
                             <div class="availability-input-field">
                                 <label>No of arrear</label>
@@ -153,7 +166,26 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var teacherRole = "{{ teacher_role }}";  // Get the teacher_role value from the server-side
+        var departmentSelect = document.getElementById('department');
+        var excel_upload= document.getElementById('file_up_down');
 
+        function updateDepartmentField() {
+            if (teacherRole === 'All') {
+                departmentSelect.disabled = false;
+                departmentSelect.value = '';  // Allow changing the department
+                excel_upload.style.display = 'none';
+            } else {
+                departmentSelect.disabled = true;
+                departmentSelect.value = teacherRole;  // Set to the teacher_role value and disable
+            }
+        }
+
+        updateDepartmentField();
+    });
+</script>
 <!-- Include necessary JavaScript libraries -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>

@@ -28,5 +28,6 @@ class User(models.Model):
     user_name = models.CharField(max_length=100)
     Department = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
+    role = models.CharField(max_length=50)
     Password = models.CharField(max_length=100)
     conform_Password = models.CharField(max_length=100)
