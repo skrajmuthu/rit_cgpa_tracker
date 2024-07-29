@@ -24,39 +24,43 @@
  
 <!-- End vertical navbar -->
 {% block maincontent %}
-<div class="rit"></div>
-<img src="{% static 'images/rit.jpg' %}" alt="">
+<div class="rit" ><img src="{% static 'images/rit.jpg' %}"  style="width: 100%;" alt=""></div>
+
 <!-- Page content holder -->
-<div class="page-content p-5" id="content">
+<div class=" p-5" id="content">
     <div class="rit"></div>
     <div class="container">
+        <center>
         <div class="heading">
-            <center><h1>RIT CGPA Tracking</h1></center>
-        </div>
-
-        <div class="row card-row" style="margin-top: 20px; margin-left: 350px;">
+           <h1>RIT CGPA Tracking</h1>
+        </div></center>
+        <div  >
+            <div class="">
+        <div class="row card-row" style="margin-top: 20px; justify-content: center;">
             <div class="col-md-6">
                 <a href="{% url 'student' %}?role=student" class="card-link" id="student-btn">
                     <div class="card" style="background-color: #005073;">
                         <div class="card-body">
-                            <span><center>Student Form</center></span>
+                            <span style="color: #ffffff;"><center>Student Form</center></span>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
-
-        <div class="row" style="margin-top: 20px; margin-left: 350px;">
+    
+        <div class="row" style="margin-top: 20px; justify-content: center;">
             <div class="col-md-6">
                 <a href="{% url 'login' %}" class="card-link" id="staff-btn">
                     <div class="card" style="background-color: #005073;">
                         <div class="card-body">
-                            <span><center>Staff Login</center></span>
+                            <span style="color: #ffffff;"><center>Staff Login</center></span>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
+    </div>
+    </div>
     </div>
 </div>
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>

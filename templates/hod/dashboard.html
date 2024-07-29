@@ -56,19 +56,20 @@
     <div class="row">
         <div class="container table_container">
             <header>Filter Form</header>
-            <form method="POST" autocomplete="off" enctype="multipart/form-data">
+            <form method="POST" autocomplete="off" enctype="multipart/form-data" id="filterForm">
                 {% csrf_token %}
                 <div class="form first">
                     <div class="details personal">
                         <div class="fields">
                             <div class="availability-input-field">
                                 <label>CGPA </label>
-                                <input type="text" id="cgpa" name="cgpa" value="{% if cgpa %}{{ cgpa }}{% endif %}" placeholder="Enter cgpa" required>
+                                <input type="number" id="cgpa" name="cgpa" step="0.01" placeholder="Enter cgpa">
                             </div>
                             <div class="availability-input-field">
                                 <label>Department</label>
-                                <select id="department" name="department" class="form-control" required>
-                                    <option value="" disabled selected>Select Department</option>
+                                <select id="department" name="department" class="form-control">
+                                    <option value="" hidden selected>Select Department</option>
+                                    <option value="All">All Department</option>
                                     <option value="B.TECH AD">AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
                                     <option value="B.E CIVIL">CE-CIVIL ENGINEERING</option>
                                     <option value="B.TECH CSBS">CB-COMPUTER SCIENCE AND BUSINESS SYSTEM</option>
@@ -80,39 +81,63 @@
                                 </select>
                             </div>
                             <div class="availability-input-field">
-                                <label>No of arrear</label>
-                                <input type="text" id="no_of_arrear" name="no_of_arrear" value="{% if no_of_arrear %}{{ no_of_arrear }}{% endif %}" placeholder="Enter no of arrear" required>
+                                <label>History of arrear</label>
+                                <input type="number" id="history_of_arrear" name="history_of_arrear" placeholder="Enter no of arrear">
                             </div>
-                           
                             <div class="availability-input-field">
-                                <label for="">Bag Of Log</label>
-                                <select name="bag_of_log" class="form-control" id="bag_of_log" required>
+                                <label for="bag_of_log">Bag Of Log</label>
+                                <select name="bag_of_log" class="form-control" id="bag_of_log">
                                     <option value="" selected hidden>Select bag of log</option>
-                                    <option value="Yes & No" {% if bag_of_log == 'Yes & No' %}selected{% endif %}>Both</option>
-                                    <option value="Yes" {% if bag_of_log == 'Yes' %}selected{% endif %}>Yes</option> 
-                                    <option value="NO" {% if bag_of_log == 'NO' %}selected{% endif %}>NO</option>
+                                    <option value="Yes & No">Both</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="NO">NO</option>
                                 </select>
                             </div>
                             <div class="availability-input-field">
                                 <label>Batch</label>
-                                <select id="batch" name="batch" class="form-control" required>
-                                    <option value="" disabled selected>Select Batch</option>
+                                <select id="batch" name="batch" class="form-control">
+                                    <option value="" hidden selected>Select Batch</option>
                                     {% for year in batch_years %}
-                                    <option value="{{ year }}" {% if batch == year %}selected{% endif %}>{{ year }}</option>
+                                    <option value="{{ year }}">{{ year }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
+                            <div class="availability-input-field">
+                                <label>sslc</label>
+                                <input type="number" id="sslc" name="sslc" step="0.01" placeholder="Enter no of arrear">
+                            </div>
+                            <div class="availability-input-field">
+                                <label>hsc</label>
+                                <input type="number" id="hsc" name="hsc" step="0.01" placeholder="Enter no of arrear">
+                            </div>
+                            <div class="availability-input-field" style="position: relative;">
+                                <label for="semester">Semester</label>
+                                <select name="semester" id="semester" multiple multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3" onchange="handleSemesterChange()" style="position: relative; z-index: 50;">
+                                    <option value="semester1">semester1</option>
+                                    <option value="semester2">semester2</option>
+                                    <option value="semester3">semester3</option>
+                                    <option value="semester4">semester4</option>
+                                    <option value="semester5">semester5</option>
+                                    <option value="semester6">semester6</option>
+                                    <option value="semester7">semester7</option>
+                                    <option value="semester8">semester8</option>
+                                </select>
+                            </div>
+                            <div class="availability-input-field" id="gpa-field" style="display: none;">
+                                <label>GPA</label>
+                                <input type="number" id="gpa" name="gpa" placeholder="Enter GPA">
+                            </div>
                         </div>
-                        
                     </div>
                     <div class="details ID">
-                        <button type="submit" class="nextBtn">
+                        <button type="submit" class="nextBtn" id="filterButton" disabled>
                             <span class="btnText">Filter</span>
                             <i class="uil uil-navigator"></i>
                         </button>
                     </div>
                 </div>
             </form>
+
 
             <main class="table" id="customers_table">
                 <section class="table__header">
@@ -135,6 +160,7 @@
 <thead>
                             <tr>
                                 <th>Batch</th>
+                                <th>Department</th>
                                 <th>Reg No</th>
                                 <th>Student Name</th>
                                 <th>Batch</th>
@@ -142,7 +168,15 @@
                                 <th>sslc</th>
                                 <th>hsc</th>
                                 <th>bag_of_log</th>
-                                <th>No_of_arrear</th>
+                                <th>history_of_arrear</th>
+                                <th>Semester1</th>
+                                <th>Semester2</th>
+                                <th>Semester3</th>
+                                <th>Semester4</th>
+                                <th>Semester5</th>
+                                <th>Semester6</th>
+                                <th>Semester7</th>
+                                <th>Semester8</th>
 
                             </tr>
                         </thead>
@@ -150,6 +184,7 @@
                             {% for value in data %}
                             <tr>
                                 <td>{{ value.batch }}</td>
+                                <td>{{ value.department }}</td>
                                 <td>{{ value.reg_no }}</td>
                                 <td>{{ value.student_name }}</td>
                                 <td>{{ value.batch }}</td>
@@ -157,7 +192,15 @@
                                 <td>{{ value.sslc }}</td>
                                 <td>{{ value.hsc }}</td>
                                 <td>{{ value.bag_of_log }}</td>
-                                <td>{{ value.no_of_arrear }}</td>
+                                <td>{{ value.history_of_arrear }}</td>
+                                <td>{{value.semester1}}</td>
+                                <td>{{value.semester2}}</td>
+                                <td>{{value.semester3}}</td>
+                                <td>{{value.semester4}}</td>
+                                <td>{{value.semester5}}</td>
+                                <td>{{value.semester6}}</td>
+                                <td>{{value.semester7}}</td>
+                                <td>{{value.semester8}}</td>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -186,6 +229,59 @@
         updateDepartmentField();
     });
 </script>
+<script>
+     function handleSemesterChange() {
+        console.log('its working')
+        var semesterSelect = document.getElementById("semester");
+        var selectedOptions = Array.from(semesterSelect.options).filter(option => option.selected).map(option => option.value);
+        var gpaField = document.getElementById("gpa-field");
+
+        if (selectedOptions.length === 1) {
+            gpaField.style.display = "block";
+        } else {
+            gpaField.style.display = "none";
+        }
+    }
+</script>
+<script>
+    function handleSemesterChange() {
+
+        var semesterSelect = document.getElementById('semester');
+        var gpaField = document.getElementById('gpa-field');
+        var gpaInput = document.getElementById('gpa');
+    
+        var isSemesterSelected = semesterSelect.selectedOptions.length > 0;
+    
+        if (isSemesterSelected) {
+            gpaField.style.display = 'block';
+            gpaInput.required = true;
+        } else {
+            gpaField.style.display = 'none';
+            gpaInput.required = false;
+        }
+        checkFields();
+    }
+    
+    function checkFields() {
+        var form = document.getElementById('filterForm');
+        var filterButton = document.getElementById('filterButton');
+        var fields = form.querySelectorAll('input, select');
+        var isAnyFieldFilled = Array.from(fields).some(field => field.value.trim() !== '');
+    
+        filterButton.disabled = !isAnyFieldFilled;
+    }
+    
+    // Add event listeners to all input and select elements to check the fields on change
+    document.addEventListener('DOMContentLoaded', (event) => {
+        var form = document.getElementById('filterForm');
+        var fields = form.querySelectorAll('input, select');
+    
+        fields.forEach(field => {
+            field.addEventListener('input', checkFields);
+            field.addEventListener('change', checkFields);
+        });
+    });
+    </script>
 <!-- Include necessary JavaScript libraries -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
@@ -198,6 +294,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+<script src="{% static 'JS/multiselect-dropdown.js' %}"></script>
 <!-- <script src="{% static 'JS/multiselect-dropdown.js' %}"></script> -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {

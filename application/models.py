@@ -10,7 +10,7 @@ class Student(models.Model):
     sslc = models.FloatField()
     hsc = models.FloatField()
     bag_of_log = models.TextField(blank=True, null=True)
-    no_of_arrear = models.IntegerField()
+    history_of_arrear = models.IntegerField()
     
     # Semester fields as FloatField to represent GPA or similar values
     semester1 = models.CharField(max_length=20,blank=True, null=True)

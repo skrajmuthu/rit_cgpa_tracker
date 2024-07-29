@@ -68,7 +68,7 @@
 
               <div class="input-field">
                 <label>Department</label>
-                <select name="department" class="form-control" required>
+                <select name="department" class="form-control" readonly>
                   
                   <option value="B.TECH AD" {% if reg_value.department == "B.TECH AD" %}selected{% endif %}>AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
                   <option value="B.E CIVIL" {% if reg_value.department == "B.E CIVIL" %}selected{% endif %}>CE-CIVIL ENGINEERING</option>
@@ -95,13 +95,13 @@
                 <input type="text" name="cgpa" id="cgpa" value="{{ reg_value.cgpa }}" placeholder="Enter Current CGPA" readonly>
             </div>
               <div class="input-field">
-                <label>No of Current Arrear</label>
-                <input type="number" name="no_of_arrear" value="{{ reg_value.no_of_arrear }}" placeholder="Enter No of Current Arrear" readonly>
+                <label>History of Arrear</label>
+                <input type="number" name="history_of_arrear" value="{{ reg_value.history_of_arrear }}" placeholder="Enter No of Current Arrear" readonly>
               </div>
 
               <div class="input-field">
                 <label>Bag Of Log</label>
-                <select name="bag_of_log" required>
+                <select name="bag_of_log" readonly>
                   
                   <option value="Yes" {% if reg_value.bag_of_log == "Yes" %}selected{% endif %}>Yes</option>
                   <option value="No" {% if reg_value.bag_of_log == "No" %}selected{% endif %}>No</option>

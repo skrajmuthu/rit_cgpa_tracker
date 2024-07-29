@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .form import Student_form,userform
+from django.db.models import Q
+
 from .models import Student,User
 from datetime import datetime
 from django.contrib.auth import login as auth_login
@@ -205,30 +207,54 @@ def dashboard(request):
             data = Student.objects.all() if teacher_role == 'All' else Student.objects.filter(department=teacher_role)
         except Student.DoesNotExist:
             data = None 
-
+        students = Student.objects.all()
         if request.method == 'POST':
             cgpa = request.POST.get('cgpa')
-            department =request.POST.get('department')
-            no_of_arrear = request.POST.get('no_of_arrear')
+            department = request.POST.get('department')
+            history_of_arrear = request.POST.get('history_of_arrear')
             bag_of_log = request.POST.get('bag_of_log')
             batch = request.POST.get('batch')
-            # Initialize filters
-            filters = {}
+            sslc = request.POST.get('sslc')
+            hsc = request.POST.get('hsc')
+            semesters = request.POST.getlist('semester')
+            gpa = request.POST.get('gpa')
 
             if cgpa:
-                filters['cgpa__gte'] = float(cgpa)
-            if department:
-                filters['department'] =department
-            if no_of_arrear:
-                filters['no_of_arrear__lte'] = int(no_of_arrear)
+                students = students.filter(cgpa__gte=cgpa)
+            
+            if department and department != 'All':
+                students = students.filter(department=department)
+            
+            if history_of_arrear:
+                students = students.filter(history_of_arrear__lte=history_of_arrear)
+            
+            if bag_of_log:
+                if bag_of_log == 'Yes & No':
+                    # No filter needed as we want both Yes and No
+                    pass
+                else:
+                    students = students.filter(bag_of_log=bag_of_log)
+            
             if batch:
-                filters['batch'] = batch
-            if bag_of_log !='Yes & No':
-                filters['bag_of_log'] = bag_of_log
+                students = students.filter(batch=batch)
+            
+            if sslc:
+                students = students.filter(sslc__gte=sslc)
+            
+            if hsc:
+                students = students.filter(hsc__gte=hsc)
+            
+            if semesters and gpa:
+                semester_filters = Q()  # Initialize an empty Q object for AND operation
+                for sem in semesters:
+                    # Create a filter for each semester
+                    semester_filter = Q(**{f'{sem}__gte': gpa})
+                    # Combine all semester filters with AND operation
+                    semester_filters &= semester_filter
+                
+                students = students.filter(semester_filters)
 
-            # Apply filters to the queryset
-            data = Student.objects.filter(**filters)
-            return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
+            return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":students,'role':role,'teacher_role':teacher_role})
         return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
     else:
         return redirect('login')
@@ -267,28 +293,31 @@ def upload_cgpa(request):
         # Loop through each row in the DataFrame and update or create Student records
         for index, row in df.iterrows():
             reg_no = row['reg_no']
-            defaults = {
-                'batch': row['batch'],
-                'student_name': row['student_name'],
-                'department': row['department'],
-                'cgpa': row['cgpa'],
-                'sslc': row['sslc'],
-                'hsc': row['hsc'],
-                'bag_of_log': row['bag_of_log'],
-                'no_of_arrear': row['no_of_arrear'],
-                'semester1': row['semester1'],
-                'semester2': row['semester2'],
-                'semester3': row['semester3'],
-                'semester4': row['semester4'],
-                'semester5': row['semester5'],
-                'semester6': row['semester6'],
-                'semester7': row['semester7'],
-                'semester8': row['semester8']
-            }
+            if row['department'] == teacher_role:
+                defaults = {
+                    'batch': row['batch'],
+                    'student_name': row['student_name'],
+                    'department': row['department'],
+                    'cgpa': row['cgpa'],
+                    'sslc': row['sslc'],
+                    'hsc': row['hsc'],
+                    'bag_of_log': row['bag_of_log'],
+                    'history_of_arrear': row['history_of_arrear'],
+                    'semester1': row['semester1'],
+                    'semester2': row['semester2'],
+                    'semester3': row['semester3'],
+                    'semester4': row['semester4'],
+                    'semester5': row['semester5'],
+                    'semester6': row['semester6'],
+                    'semester7': row['semester7'],
+                    'semester8': row['semester8']
+                }
 
-            student, created = Student.objects.update_or_create(
-                reg_no=reg_no, defaults=defaults
-            )
+                student, created = Student.objects.update_or_create(
+                    reg_no=reg_no, defaults=defaults
+                )
+            else:
+                continue
 
         messages.success(request, 'Student data uploaded successfully!')
         return render(request, 'hod/dashboard.html',{"data":data,'message':"Data successfully added/updated.",'teacher_role':teacher_role})

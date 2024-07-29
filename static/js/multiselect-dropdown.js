@@ -44,7 +44,7 @@ style.innerHTML = `
   border: solid 1px #ced4da;
   display: none;
   margin: -1px;
-  position: absolute;
+  position: inherit;
   top:0;
   left: 0;
   right: 0;
