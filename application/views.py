@@ -271,8 +271,8 @@ def download_excel(request):
 
 
 def upload_cgpa(request):
-    data = Student.objects.all()
     teacher_role = request.session.get('user')['deportment']
+    data = Student.objects.filter(department=teacher_role)
     if request.method == 'POST':
         excel_file = request.FILES['file']
 
@@ -291,7 +291,7 @@ def upload_cgpa(request):
         if not all(column in df.columns for column in expected_columns):
             messages.error(request, 'The uploaded file does not match the required format.')
             return redirect('upload_cgpa')
-
+        other_department=[]
         # Loop through each row in the DataFrame and update or create Student records
         for index, row in df.iterrows():
             reg_no = row['reg_no']
@@ -319,10 +319,16 @@ def upload_cgpa(request):
                     reg_no=reg_no, defaults=defaults
                 )
             else:
+                other_department.append(reg_no)
                 continue
-
-        messages.success(request, 'Student data uploaded successfully!')
-        return render(request, 'hod/dashboard.html',{"data":data,'message':"Data successfully added/updated.",'teacher_role':teacher_role})
+        print('-------------------',other_department)
+        if len(other_department) >=1 :
+            message=f'Currect Student data uploaded successfully! But this reg numbers have issue in department column {other_department} '
+            messages.success(request,message )
+        else:
+            message ='Student data uploaded successfully!'
+            messages.success(request, message)
+        return render(request, 'hod/dashboard.html',{"data":data,'message':message,'teacher_role':teacher_role})
 
     return render(request, 'hod/dashboard.html',{"data":data,'teacher_role':teacher_role})
 

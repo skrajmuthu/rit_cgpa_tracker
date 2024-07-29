@@ -200,7 +200,7 @@
                                 <td>{{value.semester5}}</td>
                                 <td>{{value.semester6}}</td>
                                 <td>{{value.semester7}}</td>
-                                <td>{{value.semester8}}</td>
+                                <td>{{value.semester8}}</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -309,7 +309,28 @@
             alert(message.textContent);
         }
     });
+    document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.input-group input');
+    const tableBody = document.querySelector('.table__body tbody');
+
+    searchInput.addEventListener('input', function() {
+        const searchValue = searchInput.value.toLowerCase();
+        const rows = tableBody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const rowText = row.textContent.toLowerCase();
+            if (rowText.includes(searchValue) || searchValue === '') {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+
 </script>
+
+
 <script>
     // Function to collect filter values and display in PDF
     function collectFilterValues() {
