@@ -218,12 +218,14 @@ def dashboard(request):
             hsc = request.POST.get('hsc')
             semesters = request.POST.getlist('semester')
             gpa = request.POST.get('gpa')
-
+            
             if cgpa:
                 students = students.filter(cgpa__gte=cgpa)
-            
-            if department and department != 'All':
-                students = students.filter(department=department)
+            if teacher_role == 'All':
+                if department and department != 'All':
+                    students = students.filter(department=department)
+            else:
+                students = students.filter(department=teacher_role)
             
             if history_of_arrear:
                 students = students.filter(history_of_arrear__lte=history_of_arrear)
