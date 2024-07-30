@@ -52,7 +52,7 @@
 
               <div class="input-field">
                 <label>Batch</label>
-                <select id="batch" name="batch" class="form-control" value="{{ reg_value.batch }}" readonly>
+                <select id="batch" name="batch" class="form-control" value="{{ reg_value.batch }}" disabled readonly>
                   
                   {% for year in batch_years %}
                   <option value="{{ year }}" {% if batch == year %}selected{% endif %}>{{ year }}</option>
@@ -65,10 +65,15 @@
                 <label>Name</label>
                 <input type="text" id="fromdate" name="student_name" value="{{ reg_value.student_name }}" placeholder="Enter Name" readonly>
               </div>
-
+              
               <div class="input-field">
                 <label>Department</label>
-                <select name="department" class="form-control" readonly>
+                <input type="text" id="fromdate" name="department" value="{{ reg_value.department }}" placeholder="Enter department" readonly>
+              </div>
+<!-- 
+              <div class="input-field">
+                <label>Department</label>
+                <select name="department" class="form-control"  disabled readonly>
                   
                   <option value="B.TECH AD" {% if reg_value.department == "B.TECH AD" %}selected{% endif %}>AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
                   <option value="B.E CIVIL" {% if reg_value.department == "B.E CIVIL" %}selected{% endif %}>CE-CIVIL ENGINEERING</option>
@@ -79,7 +84,7 @@
                   <option value="B.TECH IT" {% if reg_value.department == "B.TECH IT" %}selected{% endif %}>IT-INFORMATION TECHNOLOGY</option>
                   <option value="B.E MECH" {% if reg_value.department == "B.E MECH" %}selected{% endif %}>ME-MECHANICAL ENGINEERING</option>
                 </select>
-              </div>
+              </div> -->
 
               <div class="input-field">
                 <label>SSLC Percentage</label>
@@ -89,6 +94,10 @@
               <div class="input-field">
                 <label>HSC Percentage</label>
                 <input type="text" name="hsc" id="hsc" value="{{ reg_value.hsc }}" placeholder="Enter HSC Percentage" readonly>
+              </div>
+              <div class="input-field">
+                <label>diploma</label>
+                <input type="text" name="diploma" value="{{ reg_value.diploma }}" placeholder="Enter diploma Percentage /nan" readonly>
               </div>
               <div class="input-field"> 
                 <label>CGPA</label>
@@ -100,13 +109,10 @@
               </div>
 
               <div class="input-field">
-                <label>Bag Of Log</label>
-                <select name="bag_of_log" readonly>
-                  
-                  <option value="Yes" {% if reg_value.bag_of_log == "Yes" %}selected{% endif %}>Yes</option>
-                  <option value="No" {% if reg_value.bag_of_log == "No" %}selected{% endif %}>No</option>
-                </select>
+                <label>diploma</label>
+                <input type="text" name="diploma" value="{{ reg_value.diploma }}" placeholder="Enter diploma Percentage /nan" readonly>
               </div>
+
             </div>
 
             <span class="title">Details</span>

@@ -33,7 +33,7 @@
     
     <header>Registration</header>
 
-    <form method="POST" action="{% url 'insert_grade'  %}" autocomplete="off" enctype="multipart/form-data">
+    <form method="POST" action="{% url 'insert_grade'  %}?role=teacher" autocomplete="off" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form first">
             <div class="details personal">
@@ -58,21 +58,24 @@
                         <label>Name</label>
                         <input type="text" id="fromdate" name="student_name" placeholder="Enter Name" required>
                     </div>
-    
                     <div class="input-field">
                         <label>Department</label>
-                        <select name="department" class="form-control"  required>
-                            <option  value="" hidden selected>Select</option>
-                                <option value="B.TECH AD">AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
-                                <option value="B.E CIVIL">CE-CIVIL ENGINEERING</option>
-                                <option value="B.TECH CSBS">CB-COMPUTER SCIENCE AND BUSINESS SYSTEM</option>
-                                <option value="B.E CSE">CS-COMPUTER SCIENCE AND ENGINEERING</option>
-                                <option value="B.E EEE">EE-ELECRICAL AND ELECTRONICS ENGINEERING</option>
-                                <option value="B.E ECE">EC-ELECTRONICS AND COMMUNICATION ENGINEERING</option>
-                                <option value="B.TECH IT">IT-INFORMATION TECHNOLOGY</option>
-                                <option value="B.E MECH">ME-MECHANICAL ENGINEERING</option>
+                        <input type="text" id="fromdate" name="department" value="{{ teacher_role }}" placeholder="Enter department" readonly>
+                      </div>
+                    <!-- <div class="input-field">
+                        <label>Department</label>
+                        <select name="department" class="form-control" disabled  required>
+                            <option  value="" hidden >Select</option>
+                            <option value="B.TECH AD" {% if teacher_role == "B.TECH AD" %}selected{% endif %}>AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
+                            <option value="B.E CIVIL" {% if teacher_role == "B.E CIVIL" %}selected{% endif %}>CE-CIVIL ENGINEERING</option>
+                            <option value="B.TECH CSBS" {% if teacher_role == "B.TECH CSBS" %}selected{% endif %}>CB-COMPUTER SCIENCE AND BUSINESS SYSTEM</option>
+                            <option value="B.E CSE" {% if teacher_role == "B.E CSE" %}selected{% endif %}>CS-COMPUTER SCIENCE AND ENGINEERING</option>
+                            <option value="B.E EEE" {% if teacher_role == "B.E EEE" %}selected{% endif %}>EE-ELECTRICAL AND ELECTRONICS ENGINEERING</option>
+                            <option value="B.E ECE" {% if teacher_role == "B.E ECE" %}selected{% endif %}>EC-ELECTRONICS AND COMMUNICATION ENGINEERING</option>
+                            <option value="B.TECH IT" {% if teacher_role == "B.TECH IT" %}selected{% endif %}>IT-INFORMATION TECHNOLOGY</option>
+                            <option value="B.E MECH" {% if teacher_role == "B.E MECH" %}selected{% endif %}>ME-MECHANICAL ENGINEERING</option>
                             </select>           
-                    </div>
+                    </div> -->
     
                     <div class="input-field">
                         <label>sslc Percentage </label>
@@ -80,9 +83,12 @@
                     </div>
                     <div class="input-field"> 
                         <label>hsc Percentage</label>
-                        <input type="text" name="hsc" id="hsc" placeholder="Enter hsc Percentage" required>
+                        <input type="text" name="hsc" id="hsc" placeholder="Enter hsc Percentage / nan" required>
                     </div>
-    
+                    <div class="input-field">
+                        <label>diploma</label>
+                        <input type="text" name="diploma"  placeholder="Enter diploma Percentage /nan" required>
+                      </div>
                     <div class="input-field"> 
                         <label>CGPA</label>
                         <input type="text" name="cgpa" id="cgpa" placeholder="Enter Current CGPA" required>
@@ -91,15 +97,11 @@
                         <label>History of Arrear</label>
                         <input type="number" name="history_of_arrear" placeholder="Enter No of Current Arrear" required>
                     </div>
-    
                     <div class="input-field">
-                        <label>Bag Of Log</label>
-                        <select name="bag_of_log" required>
-                            <option value="" selected hidden>Select Yes / NO</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
+                        <label>Current Bag Of Log</label>
+                        <input type="number" name="bag_of_log" placeholder="Enter No of Current Bag Of Log" required>
                     </div>
+                    
                 </div>
                 <span class="title"> Details</span>
                 <!-- <div class="fields">

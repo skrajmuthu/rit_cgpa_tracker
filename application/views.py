@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .form import Student_form,userform
 from django.db.models import Q
 
-from .models import Student,User
+from .models import Student,User,defalut_email_id
 from datetime import datetime
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import authenticate
@@ -36,29 +36,35 @@ def signup(request):
     if request.method == 'POST':
         form = userform(request.POST)   
         if form.is_valid():
-            password = form.cleaned_data['Password']
-            confirm_password = form.cleaned_data['conform_Password']
-            if password == confirm_password:
-                encrypted_password = encrypt_password(password)
+            user = form.save(commit=False) 
+          
+            default_user = defalut_email_id.objects.filter(email_id=user.email,department= user.Department).first()
+           
+            if default_user:
+                password = form.cleaned_data['Password']
+                confirm_password = form.cleaned_data['conform_Password']
+                if password == confirm_password:
+                    encrypted_password = encrypt_password(password)
 
-                # Save the encrypted password to your user model
-                user = form.save(commit=False)  # Don't save the form yet
-                user.Password = encrypted_password
-                user.conform_Password = encrypted_password
+                    # Save the encrypted password to your user model
+                    # Don't save the form yet
+                    user.Password = encrypted_password
+                    user.conform_Password = encrypted_password
 
-                user.save()
+                    user.save()
 
-                # Redirect to a success page or login page
-                return redirect('login')
+                    # Redirect to a success page or login page
+                    return redirect('login')
+                else:
+                    # Passwords don't match, return an error
+                    form.add_error('confirm_password', 'Passwords do not match')
+                    return render(request, "auth/signup.html", {'form': form})
             else:
-                # Passwords don't match, return an error
-                form.add_error('confirm_password', 'Passwords do not match')
-                return render(request, "auth/signup.html", {'form': form})
+                 return render(request, 'auth/signup.html',{'form': form,"error_message": "Unauthorized access to create account"})
         else:
             return render(request, "error.html", {'form': form})
     else:
         form = userform()
-
     return render(request, "auth/signup.html", {'form': form})
 
 
@@ -131,66 +137,70 @@ def student(request):
 
 
 def insert_grade(request):
-    current_year = datetime.now().year
-    batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
-    if request.method == 'POST':
-        reg_no = request.POST.get('reg_no')
-        try:
-            student = Student.objects.get(reg_no=reg_no)
-            form = Student_form(request.POST, instance=student)  # Load existing student data into the form
-        except Student.DoesNotExist:
-            form = Student_form(request.POST)
+    role = request.GET.get('role')
+    print('---------insert_grade-------',role,request.session.get('user_auth'))
+    if role == 'teacher' and request.session.get('user_auth'):
+        teacher_role = request.session.get('user')['deportment']
+        current_year = datetime.now().year
+        batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
+        if request.method == 'POST':
+            reg_no = request.POST.get('reg_no')
+            try:
+                student = Student.objects.get(reg_no=reg_no)
+                form = Student_form(request.POST, instance=student)  # Load existing student data into the form
+            except Student.DoesNotExist:
+                form = Student_form(request.POST)
+            if form.is_valid():
+                sem1 = form.cleaned_data.get('semester1') if form.cleaned_data.get('semester1') is not None else None
+                sem2 = form.cleaned_data.get('semester2') if form.cleaned_data.get('semester2') is not None else None
+                sem3 = form.cleaned_data.get('semester3') if form.cleaned_data.get('semester3') is not None else None
+                sem4 = form.cleaned_data.get('semester4') if form.cleaned_data.get('semester4') is not None else None
+                sem5 = form.cleaned_data.get('semester5') if form.cleaned_data.get('semester5') is not None else None
+                sem6 = form.cleaned_data.get('semester6') if form.cleaned_data.get('semester6') is not None else None
+                sem7 = form.cleaned_data.get('semester7') if form.cleaned_data.get('semester7') is not None else None
+                sem8 = form.cleaned_data.get('semester8') if form.cleaned_data.get('semester8') is not None else None
+                # Calculate CGPA based on available semesers
+                # if sem8 is not None and sem8!=0:
+                #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6 + sem7 + sem8) / 8
+                # elif sem7 is not None and sem7!=0:
+                #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6 + sem7) / 7
+                # elif sem6 is not None and sem6!=0:
+                #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6) / 6
+                # elif sem5 is not None and sem5!=0:
+                #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5) / 5
+                # elif sem4 is not None and sem4!=0:
+                #     cgpa = (sem1 + sem2 + sem3 + sem4) / 4
+                # elif sem3 is not None and sem3!=0:
+                #     cgpa = (sem1 + sem2 + sem3) / 3
+                # elif sem2 is not None and sem2!=0:
+                #     cgpa = (sem1 + sem2) / 2
+                # elif sem1 is not None and sem1!=0:
+                #     cgpa = sem1
 
-        if form.is_valid():
-            sem1 = float(form.cleaned_data.get('semester1')) if form.cleaned_data.get('semester1') is not None else None
-            sem2 = float(form.cleaned_data.get('semester2')) if form.cleaned_data.get('semester2') is not None else None
-            sem3 = float(form.cleaned_data.get('semester3')) if form.cleaned_data.get('semester3') is not None else None
-            sem4 = float(form.cleaned_data.get('semester4')) if form.cleaned_data.get('semester4') is not None else None
-            sem5 = float(form.cleaned_data.get('semester5')) if form.cleaned_data.get('semester5') is not None else None
-            sem6 = float(form.cleaned_data.get('semester6')) if form.cleaned_data.get('semester6') is not None else None
-            sem7 = float(form.cleaned_data.get('semester7')) if form.cleaned_data.get('semester7') is not None else None
-            sem8 = float(form.cleaned_data.get('semester8')) if form.cleaned_data.get('semester8') is not None else None
+                # cgpa=round(cgpa,4)
 
-            # Calculate CGPA based on available semesters
-            # if sem8 is not None and sem8!=0:
-            #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6 + sem7 + sem8) / 8
-            # elif sem7 is not None and sem7!=0:
-            #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6 + sem7) / 7
-            # elif sem6 is not None and sem6!=0:
-            #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5 + sem6) / 6
-            # elif sem5 is not None and sem5!=0:
-            #     cgpa = (sem1 + sem2 + sem3 + sem4 + sem5) / 5
-            # elif sem4 is not None and sem4!=0:
-            #     cgpa = (sem1 + sem2 + sem3 + sem4) / 4
-            # elif sem3 is not None and sem3!=0:
-            #     cgpa = (sem1 + sem2 + sem3) / 3
-            # elif sem2 is not None and sem2!=0:
-            #     cgpa = (sem1 + sem2) / 2
-            # elif sem1 is not None and sem1!=0:
-            #     cgpa = sem1
+                # Save the form data to the student object
+                user = form.save(commit=False)
+                # user.cgpa = cgpa
+                user.sem1 = sem1
+                user.sem2 = sem2
+                user.sem3 = sem3
+                user.sem4 = sem4
+                user.sem5 = sem5
+                user.sem6 = sem6
+                user.sem7 = sem7
+                user.sem8 = sem8
+                user.save()
+                # messages.success(request, 'Data successfully added/updated.')
+                return render(request,'student.html',{'message':"Data successfully added/updated."})
 
-            # cgpa=round(cgpa,4)
+            else:
+                print('Form errors:', form.errors)  # Debug print for form errors
+                return render(request, 'error.html', {'form': form})
 
-            # Save the form data to the student object
-            user = form.save(commit=False)
-            # user.cgpa = cgpa
-            user.sem1 = sem1
-            user.sem2 = sem2
-            user.sem3 = sem3
-            user.sem4 = sem4
-            user.sem5 = sem5
-            user.sem6 = sem6
-            user.sem7 = sem7
-            user.sem8 = sem8
-            user.save()
-            # messages.success(request, 'Data successfully added/updated.')
-            return render(request,'student.html',{'message':"Data successfully added/updated."})
-
-        else:
-            print('Form errors:', form.errors)  # Debug print for form errors
-            return render(request, 'error.html', {'form': form})
-
-    return render(request, 'add.html',{"batch_years":batch_years})
+        return render(request, 'add.html',{"batch_years":batch_years,'role':role,'teacher_role':teacher_role})
+    else:
+        return redirect('login')
 
 from datetime import datetime
 
@@ -328,7 +338,7 @@ def upload_cgpa(request):
                 continue
 
         if len(other_department) >= 1:
-            message = f'Correct Student data uploaded successfully! But these reg numbers have issues in the department column: {other_department}'
+            message = f'Correct Student data uploaded successfully! But this reg numbers have issues in the department column: {other_department}'
             messages.success(request, message)
         else:
             message = 'Student data uploaded successfully!'

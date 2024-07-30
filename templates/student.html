@@ -43,7 +43,7 @@
     
     <input type="hidden" id="role" value="{{ role }}" >
 
-        <form id="roleForm" method="POST" action="{% url 'student' %}" autocomplete="off" enctype="multipart/form-data" onsubmit="submitForm(); return false;">
+        <form id="roleForm" method="POST" action="{% url 'student' %}?role=teacher" autocomplete="off" enctype="multipart/form-data" onsubmit="submitForm(); return false;">
             {% csrf_token %}
             <div class="form first">
                 <div class="details personal">
