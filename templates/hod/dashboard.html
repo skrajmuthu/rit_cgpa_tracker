@@ -84,15 +84,13 @@
                                 <label>History of arrear</label>
                                 <input type="number" id="history_of_arrear" name="history_of_arrear" placeholder="Enter no of arrear">
                             </div>
+
                             <div class="availability-input-field">
-                                <label for="bag_of_log">Bag Of Log</label>
-                                <select name="bag_of_log" class="form-control" id="bag_of_log">
-                                    <option value="" selected hidden>Select bag of log</option>
-                                    <option value="Yes & No">Both</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="NO">NO</option>
-                                </select>
+                                <label>Current Bag Of Log</label>
+                                <input type="number" id="bag_of_log" name="bag_of_log" placeholder="Enter no of bag_of_log">
                             </div>
+
+                            
                             <div class="availability-input-field">
                                 <label>Batch</label>
                                 <select id="batch" name="batch" class="form-control">
@@ -145,14 +143,19 @@
                         <input type="text" placeholder="Search Data...">
                         <img src="{% static 'images/search.png' %}" alt="">
                     </div>
-                    <div class="export__file">
-                        <label for="export-file" class="export__file-btn" title="Export File"></label>
+                    
+                    <div class="export__file" style="display: flex;">
+                        <P>Export   </P>
+                      <div class="">
+                          
+                        <label for="export-file" class="export__file-btn" title="Export File"> </label>
                         <input type="checkbox" id="export-file">
                         <div class="export__file-options" style="z-index: 2000;">
                             <label>Export As &nbsp; &#10140;</label>
                             <label for="export-file" class="btn btn-primary" style="color: black;" id="exportPdf">PDF <img src="{% static 'images/pdf.png' %}" alt=""></label>
                             <label for="export-file" class="btn btn-primary" style="color: black;" id="exportExcel">EXCEL <img src="{% static 'images/excel.png' %}" alt=""></label>
                         </div>
+                      </div>
                     </div>
                 </section>
                 <section class="table__body">

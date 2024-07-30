@@ -228,14 +228,10 @@ def dashboard(request):
                 students = students.filter(department=teacher_role)
             
             if history_of_arrear:
-                students = students.filter(history_of_arrear__lte=history_of_arrear)
+                students = students.filter(history_of_arrear=history_of_arrear)
             
             if bag_of_log:
-                if bag_of_log == 'Yes & No':
-                    # No filter needed as we want both Yes and No
-                    pass
-                else:
-                    students = students.filter(bag_of_log=bag_of_log)
+                students = students.filter(bag_of_log=bag_of_log)
             
             if batch:
                 students = students.filter(batch=batch)
@@ -273,12 +269,14 @@ def download_excel(request):
 def upload_cgpa(request):
     teacher_role = request.session.get('user')['deportment']
     data = Student.objects.filter(department=teacher_role)
+    
     if request.method == 'POST':
         excel_file = request.FILES['file']
 
         # Get the expected columns from the form
         form = Student_form()
         expected_columns = list(form.fields.keys())
+        print('Post method is working --------------------------', expected_columns, len(expected_columns))
 
         # Read the Excel file using pandas
         try:
@@ -290,11 +288,22 @@ def upload_cgpa(request):
         # Verify the columns in the uploaded file
         if not all(column in df.columns for column in expected_columns):
             messages.error(request, 'The uploaded file does not match the required format.')
+            print('The uploaded file does not match the required format')
+            print(df.columns)
+            for i in range(len(expected_columns)):
+                print(f'{df.columns[i]} = {expected_columns[i]} == {df.columns[i] == expected_columns[i]}')
             return redirect('upload_cgpa')
-        other_department=[]
+
+        # Replace NaN values with None and convert appropriate columns to correct data types
+        df = df.where(pd.notnull(df), None)
+        df['reg_no'] = df['reg_no'].astype(str)  # Ensure reg_no is treated as a string
+
+        other_department = []
+
         # Loop through each row in the DataFrame and update or create Student records
         for index, row in df.iterrows():
             reg_no = row['reg_no']
+            
             if row['department'] == teacher_role:
                 defaults = {
                     'batch': row['batch'],
@@ -303,6 +312,7 @@ def upload_cgpa(request):
                     'cgpa': row['cgpa'],
                     'sslc': row['sslc'],
                     'hsc': row['hsc'],
+                    'diploma': row['diploma'],
                     'bag_of_log': row['bag_of_log'],
                     'history_of_arrear': row['history_of_arrear'],
                     'semester1': row['semester1'],
@@ -321,16 +331,18 @@ def upload_cgpa(request):
             else:
                 other_department.append(reg_no)
                 continue
-        print('-------------------',other_department)
-        if len(other_department) >=1 :
-            message=f'Currect Student data uploaded successfully! But this reg numbers have issue in department column {other_department} '
-            messages.success(request,message )
-        else:
-            message ='Student data uploaded successfully!'
-            messages.success(request, message)
-        return render(request, 'hod/dashboard.html',{"data":data,'message':message,'teacher_role':teacher_role})
 
-    return render(request, 'hod/dashboard.html',{"data":data,'teacher_role':teacher_role})
+        print('-------------------', other_department)
+        if len(other_department) >= 1:
+            message = f'Correct Student data uploaded successfully! But these reg numbers have issues in the department column: {other_department}'
+            messages.success(request, message)
+        else:
+            message = 'Student data uploaded successfully!'
+            messages.success(request, message)
+        
+        return render(request, 'hod/dashboard.html', {"data": data, 'message': message, 'teacher_role': teacher_role})
+
+    return render(request, 'hod/dashboard.html', {"data": data, 'teacher_role': teacher_role})
 
 def logout (request):
     request.session.flush()

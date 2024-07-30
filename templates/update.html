@@ -89,10 +89,15 @@
                 <input type="text" name="cgpa" id="cgpa" value="{{ reg_value.cgpa }}" placeholder="Enter Current CGPA" required>
             </div>
               <div class="input-field">
-                <label>History Current Arrear</label>
+                <label>History of Arrear</label>
                 <input type="number" name="history_of_arrear" value="{{ reg_value.history_of_arrear }}" placeholder="Enter No of Current Arrear" required>
               </div>
 
+              <div class="input-field">
+                <label>current bag of log</label>
+                <input type="number" name="current_bag_of_log" value="{{ reg_value.current_bag_of_log }}" placeholder="Enter No of Current Arrear" required>
+              </div>
+<!-- 
               <div class="input-field">
                 <label>Bag Of Log</label>
                 <select name="bag_of_log" required>
@@ -101,6 +106,7 @@
                   <option value="No" {% if reg_value.bag_of_log == "No" %}selected{% endif %}>No</option>
                 </select>
               </div>
+               -->
             </div>
 
             <span class="title">Details</span>
