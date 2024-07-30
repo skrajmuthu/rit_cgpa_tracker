@@ -65,9 +65,10 @@
                                 <label>CGPA </label>
                                 <input type="number" id="cgpa" name="cgpa" step="0.01" placeholder="Enter cgpa">
                             </div>
+                            {% if teacher_role == 'All' %}
                             <div class="availability-input-field">
                                 <label>Department</label>
-                                <select id="department" name="department" class="form-control">
+                                <select id="department" name="department" class="form-control" >
                                     <option value="" hidden selected>Select Department</option>
                                     <option value="All">All Department</option>
                                     <option value="B.TECH AD">AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
@@ -80,6 +81,13 @@
                                     <option value="B.E MECH">ME-MECHANICAL ENGINEERING</option>
                                 </select>
                             </div>
+                            {%endif%}
+                            {% if teacher_role != 'All' %}
+                            <div class="availability-input-field">
+                                <label>Department </label>
+                                <input type="text" id="department" name="department"  placeholder="Enter department" value="{{teacher_role}}">
+                            </div>
+                            {%endif%}
                             <div class="availability-input-field">
                                 <label>History of arrear</label>
                                 <input type="number" id="history_of_arrear" name="history_of_arrear" placeholder="Enter no of arrear">

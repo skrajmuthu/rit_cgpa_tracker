@@ -228,30 +228,37 @@ def dashboard(request):
             hsc = request.POST.get('hsc')
             semesters = request.POST.getlist('semester')
             gpa = request.POST.get('gpa')
-            
+            filters = {}
+
             if cgpa:
-                students = students.filter(cgpa__gte=cgpa)
+                filters['cgpa__gte'] = float(cgpa)
             if teacher_role == 'All':
                 if department and department != 'All':
-                    students = students.filter(department=department)
+                    filters['department'] = department
             else:
-                students = students.filter(department=teacher_role)
-            
+                filters['department'] = teacher_role
+
             if history_of_arrear:
-                students = students.filter(history_of_arrear=history_of_arrear)
-            
+                filters['history_of_arrear'] = history_of_arrear
+
             if bag_of_log:
-                students = students.filter(bag_of_log=bag_of_log)
-            
+                filters['bag_of_log'] = bag_of_log
+
             if batch:
-                students = students.filter(batch=batch)
-            
+                filters['batch'] = batch
+
             if sslc:
-                students = students.filter(sslc__gte=sslc)
-            
+                filters['sslc__gte'] = float(sslc)
+
             if hsc:
-                students = students.filter(hsc__gte=hsc)
-            
+                filters['hsc__gte'] = float(hsc)
+
+            # Apply filters to the queryset
+            students = Student.objects.filter(**filters)
+
+            print('******************', students,'\n\n',filters)
+
+            # Apply semester filters
             if semesters and gpa:
                 semester_filters = Q()  # Initialize an empty Q object for AND operation
                 for sem in semesters:
@@ -259,9 +266,9 @@ def dashboard(request):
                     semester_filter = Q(**{f'{sem}__gte': gpa})
                     # Combine all semester filters with AND operation
                     semester_filters &= semester_filter
-                
-                students = students.filter(semester_filters)
 
+                students = students.filter(semester_filters)
+            print('******************',students)
             return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":students,'role':role,'teacher_role':teacher_role})
         return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
     else:
