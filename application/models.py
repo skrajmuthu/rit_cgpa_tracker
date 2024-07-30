@@ -8,8 +8,8 @@ class Student(models.Model):
     department = models.CharField(max_length=100)
     cgpa = models.FloatField()
     sslc = models.FloatField()
-    hsc = models.FloatField(blank=True, null=True)
-    diploma = models.FloatField(blank=True, null=True)
+    hsc = models.CharField(max_length=20,blank=True, null=True)
+    diploma = models.CharField(max_length=20,blank=True, null=True)
     bag_of_log = models.IntegerField()
     history_of_arrear = models.IntegerField()
     

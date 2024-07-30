@@ -276,7 +276,6 @@ def upload_cgpa(request):
         # Get the expected columns from the form
         form = Student_form()
         expected_columns = list(form.fields.keys())
-        print('Post method is working --------------------------', expected_columns, len(expected_columns))
 
         # Read the Excel file using pandas
         try:
@@ -288,10 +287,6 @@ def upload_cgpa(request):
         # Verify the columns in the uploaded file
         if not all(column in df.columns for column in expected_columns):
             messages.error(request, 'The uploaded file does not match the required format.')
-            print('The uploaded file does not match the required format')
-            print(df.columns)
-            for i in range(len(expected_columns)):
-                print(f'{df.columns[i]} = {expected_columns[i]} == {df.columns[i] == expected_columns[i]}')
             return redirect('upload_cgpa')
 
         # Replace NaN values with None and convert appropriate columns to correct data types
@@ -332,7 +327,6 @@ def upload_cgpa(request):
                 other_department.append(reg_no)
                 continue
 
-        print('-------------------', other_department)
         if len(other_department) >= 1:
             message = f'Correct Student data uploaded successfully! But these reg numbers have issues in the department column: {other_department}'
             messages.success(request, message)
