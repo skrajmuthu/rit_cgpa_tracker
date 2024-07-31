@@ -32,10 +32,12 @@
       </div>
     </div>
   </div>
-
+  {% if role != 'student' or role == None%}
   <p class="text-gray font-weight-bold text-uppercase px-3 small pb-4 mb-0"><a href="{% url 'dashboard' %}?role=teacher" style="text-decoration: none;">Dashboard</a></p>
-    
-
+  {% endif %}
+  {% if role == 'student' or role == None%}
+  <p class="text-gray font-weight-bold text-uppercase px-3 small pb-4 mb-0">Dashboard</p>
+  {% endif %}
   <ul class="nav flex-column bg-white mb-0">
     {% if role == 'student'%}
     <li class="nav-item">
