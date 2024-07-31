@@ -87,7 +87,7 @@ def login(request):
             request.session['login_role'] = 'teacher'
             request.session['user']={"username":user.user_name,'email':email,'deportment':user.Department}
             role = 'teacher'
-            base_url = reverse('dashboard')  # Get the base URL for the 'dashboard' view
+            base_url = reverse('dashboard')  # Get the base URL for the 'accadamic_details' view
             query_string = f'?role={role}'  # Construct the query string
             url = base_url + query_string  # Combine the base URL and query string
             return redirect(url)
@@ -204,7 +204,7 @@ def insert_grade(request):
 
 from datetime import datetime
 
-def dashboard(request):
+def accadamic_details(request):
     role = request.GET.get('role')
     if role == 'teacher' and request.session.get('user_auth'):
         user=request.session.get('user', {})
@@ -269,8 +269,8 @@ def dashboard(request):
 
                 students = students.filter(semester_filters)
             
-            return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":students,'role':role,'teacher_role':teacher_role})
-        return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
+            return render(request, 'hod/accadamic_details.html',{"batch_years":batch_years,"data":students,'role':role,'teacher_role':teacher_role})
+        return render(request, 'hod/accadamic_details.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
     else:
         return redirect('login')
     
@@ -284,77 +284,88 @@ def download_excel(request):
 
 
 def upload_cgpa(request):
-    teacher_role = request.session.get('user')['deportment']
-    data = Student.objects.filter(department=teacher_role)
-    
-    if request.method == 'POST':
-        excel_file = request.FILES['file']
+    role = request.GET.get('role')
+    if role == 'teacher' and request.session.get('user_auth'):
+        teacher_role = request.session.get('user')['deportment']
+        data = Student.objects.filter(department=teacher_role)
+        if request.method == 'POST':
+            excel_file = request.FILES['file']
 
-        # Get the expected columns from the form
-        form = Student_form()
-        expected_columns = list(form.fields.keys())
+            # Get the expected columns from the form
+            form = Student_form()
+            expected_columns = list(form.fields.keys())
 
-        # Read the Excel file using pandas
-        try:
-            df = pd.read_excel(excel_file)
-        except Exception as e:
-            messages.error(request, f'Error reading Excel file: {str(e)}')
-            return redirect('upload_cgpa')
+            # Read the Excel file using pandas
+            try:
+                df = pd.read_excel(excel_file)
+            except Exception as e:
+                messages.error(request, f'Error reading Excel file: {str(e)}')
+                return redirect('upload_cgpa')
 
-        # Verify the columns in the uploaded file
-        if not all(column in df.columns for column in expected_columns):
-            messages.error(request, 'The uploaded file does not match the required format.')
-            return redirect('upload_cgpa')
+            # Verify the columns in the uploaded file
+            if not all(column in df.columns for column in expected_columns):
+                messages.error(request, 'The uploaded file does not match the required format.')
+                return redirect('upload_cgpa')
 
-        # Replace NaN values with None and convert appropriate columns to correct data types
-        df = df.where(pd.notnull(df), None)
-        df['reg_no'] = df['reg_no'].astype(str)  # Ensure reg_no is treated as a string
+            # Replace NaN values with None and convert appropriate columns to correct data types
+            df = df.where(pd.notnull(df), None)
+            df['reg_no'] = df['reg_no'].astype(str)  # Ensure reg_no is treated as a string
 
-        other_department = []
+            other_department = []
 
-        # Loop through each row in the DataFrame and update or create Student records
-        for index, row in df.iterrows():
-            reg_no = row['reg_no']
-            
-            if row['department'] == teacher_role:
-                defaults = {
-                    'batch': row['batch'],
-                    'student_name': row['student_name'],
-                    'department': row['department'],
-                    'cgpa': row['cgpa'],
-                    'sslc': row['sslc'],
-                    'hsc': row['hsc'],
-                    'diploma': row['diploma'],
-                    'bag_of_log': row['bag_of_log'],
-                    'history_of_arrear': row['history_of_arrear'],
-                    'semester1': row['semester1'],
-                    'semester2': row['semester2'],
-                    'semester3': row['semester3'],
-                    'semester4': row['semester4'],
-                    'semester5': row['semester5'],
-                    'semester6': row['semester6'],
-                    'semester7': row['semester7'],
-                    'semester8': row['semester8']
-                }
+            # Loop through each row in the DataFrame and update or create Student records
+            for index, row in df.iterrows():
+                reg_no = row['reg_no']
+                
+                if row['department'] == teacher_role:
+                    defaults = {
+                        'batch': row['batch'],
+                        'student_name': row['student_name'],
+                        'department': row['department'],
+                        'cgpa': row['cgpa'],
+                        'sslc': row['sslc'],
+                        'hsc': row['hsc'],
+                        'diploma': row['diploma'],
+                        'bag_of_log': row['bag_of_log'],
+                        'history_of_arrear': row['history_of_arrear'],
+                        'semester1': row['semester1'],
+                        'semester2': row['semester2'],
+                        'semester3': row['semester3'],
+                        'semester4': row['semester4'],
+                        'semester5': row['semester5'],
+                        'semester6': row['semester6'],
+                        'semester7': row['semester7'],
+                        'semester8': row['semester8']
+                    }
 
-                student, created = Student.objects.update_or_create(
-                    reg_no=reg_no, defaults=defaults
-                )
+                    student, created = Student.objects.update_or_create(
+                        reg_no=reg_no, defaults=defaults
+                    )
+                else:
+                    other_department.append(reg_no)
+                    continue
+
+            if len(other_department) >= 1:
+                message = f'Correct Student data uploaded successfully! But this reg numbers have issues in the department column: {other_department}'
+                messages.success(request, message)
             else:
-                other_department.append(reg_no)
-                continue
+                message = 'Student data uploaded successfully!'
+                messages.success(request, message)
+            
+            return render(request, 'hod/accadamic_details.html', {"data": data, 'message': message, 'teacher_role': teacher_role})
 
-        if len(other_department) >= 1:
-            message = f'Correct Student data uploaded successfully! But this reg numbers have issues in the department column: {other_department}'
-            messages.success(request, message)
-        else:
-            message = 'Student data uploaded successfully!'
-            messages.success(request, message)
-        
-        return render(request, 'hod/dashboard.html', {"data": data, 'message': message, 'teacher_role': teacher_role})
-
-    return render(request, 'hod/dashboard.html', {"data": data, 'teacher_role': teacher_role})
+        return render(request, 'hod/accadamic_details.html', {"data": data, 'teacher_role': teacher_role})
+    else:
+        return redirect('login')
 
 def logout (request):
     request.session.flush()
     return redirect('index')
+
+def dashboard(request):
+    role = request.GET.get('role')
+    if  request.session.get('user_auth'):
+        teacher_role = request.session.get('user')['deportment']
+        return render(request, 'dashboard.html', { 'teacher_role': teacher_role,'role':role})
+    else:
+        return redirect('login')

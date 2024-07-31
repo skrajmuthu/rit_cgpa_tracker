@@ -26,6 +26,7 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('insert_grade', views.insert_grade, name="insert_grade"),
     path('dashboard', views.dashboard, name="dashboard"),
+    path('accadamic_details', views.accadamic_details, name="accadamic_details"),
     path('populate_fake_data', duplicate.populate_fake_data, name="populate_fake_data"),
     path('login', views.login, name="login"),
     path('signup', views.signup, name="signup"),
