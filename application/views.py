@@ -138,7 +138,7 @@ def student(request):
 
 def insert_grade(request):
     role = request.GET.get('role')
-    print('---------insert_grade-------',role,request.session.get('user_auth'))
+    
     if role == 'teacher' and request.session.get('user_auth'):
         teacher_role = request.session.get('user')['deportment']
         current_year = datetime.now().year
@@ -195,7 +195,7 @@ def insert_grade(request):
                 return render(request,'student.html',{'message':"Data successfully added/updated."})
 
             else:
-                print('Form errors:', form.errors)  # Debug print for form errors
+                print('Form errors:', form.errors)  
                 return render(request, 'error.html', {'form': form})
 
         return render(request, 'add.html',{"batch_years":batch_years,'role':role,'teacher_role':teacher_role})
@@ -256,7 +256,7 @@ def dashboard(request):
             # Apply filters to the queryset
             students = Student.objects.filter(**filters)
 
-            print('******************', students,'\n\n',filters)
+            
 
             # Apply semester filters
             if semesters and gpa:
@@ -268,7 +268,7 @@ def dashboard(request):
                     semester_filters &= semester_filter
 
                 students = students.filter(semester_filters)
-            print('******************',students)
+            
             return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":students,'role':role,'teacher_role':teacher_role})
         return render(request, 'hod/dashboard.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
     else:
