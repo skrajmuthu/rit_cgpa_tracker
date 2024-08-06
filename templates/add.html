@@ -83,11 +83,11 @@
                     </div>
                     <div class="input-field"> 
                         <label>hsc Percentage</label>
-                        <input type="text" name="hsc" id="hsc" placeholder="Enter hsc Percentage / nan" required>
+                        <input type="text" name="hsc" id="hsc" placeholder="Enter hsc Percentage / null" required>
                     </div>
                     <div class="input-field">
                         <label>diploma</label>
-                        <input type="text" name="diploma"  placeholder="Enter diploma Percentage /nan" required>
+                        <input type="text" name="diploma"  placeholder="Enter diploma Percentage /null" required>
                       </div>
                     <div class="input-field"> 
                         <label>CGPA</label>
@@ -101,7 +101,19 @@
                         <label>Current Bag Of Log</label>
                         <input type="number" name="bag_of_log" placeholder="Enter No of Current Bag Of Log" required>
                     </div>
-                    
+                   
+                    <div class="input-field">
+                        <label> Admission type</label>
+                        <select name="admission_type" class="form-control"   required>
+                            <option  value="" hidden >Select Admission type</option>
+                            <option value="Regular" >Regular</option>
+                            <option value="Lateral-Entry" >Lateral-Entry</option>
+                        </select>      
+                    </div>
+                    <div class="input-field">
+                        <label>contact_number</label>
+                        <input type="text" name="contact_number" placeholder="Enter contact_number" required>
+                    </div>
                 </div>
                 <span class="title"> Details</span>
                 <!-- <div class="fields">

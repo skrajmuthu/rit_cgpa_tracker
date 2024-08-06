@@ -12,7 +12,8 @@ class Student(models.Model):
     diploma = models.CharField(max_length=20,blank=True, null=True)
     bag_of_log = models.IntegerField()
     history_of_arrear = models.IntegerField()
-    
+    admission_type = models.CharField(max_length=100,blank=True, null=True)
+    contact_number = models.CharField(max_length=15,blank=True, null=True)
     # Semester fields as FloatField to represent GPA or similar values
     semester1 = models.CharField(max_length=20,blank=True, null=True)
     semester2 = models.CharField(max_length=20,blank=True, null=True)

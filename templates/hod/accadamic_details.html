@@ -25,27 +25,30 @@
 <body>
 <div class="page-content p-5" id="content">
     
-    <div class="sidebarCollapse">
-        <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
-        <a href="" hidden id="django-message">{{message|default:0}}</a>
+    <div class="sidebarCollapse" style="display: flex; justify-content: space-between;">
+       <div> <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
+       </div>
+       <a href="" hidden id="django-message">{{message|default:0}}</a>
+        <DIV > <a href="{% url 'download_excel' %}" >
+            <button  type="submit" style="color: white;background-color: green;" >
+                <span class="btnText">Sample formate excel</span>
+                <i class="uil uil-navigator"></i>
+            </button> </a></DIV>
     </div>
     <hr>
     <div class="file_up_down" id='file_up_down' style="display: flex;">
-        <a href="{% url 'download_excel' %}">
+       
+       <div> <form method="post" action="{% url 'upload_cgpa'  %}?role=teacher" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <label for="file"></label>
+        <input type="file" name="file" class="nextBtn" required>
         <button type="submit" class="nextBtn">
-            <span class="btnText">Sample formate excel</span>
-            <i class="uil uil-navigator"></i>
-        </button> </a>
-        <form method="post" action="{% url 'upload_cgpa'  %}?role=teacher" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <label for="file"></label>
-            <input type="file" name="file" class="nextBtn" required>
-            <button type="submit" class="nextBtn">
-                <span class="btnText">Upload</span>
-                <i class="uil uil-upload"></i>
-            </button>
-        </form>
+            <span class="btnText">Upload</span>
+            <i class="uil uil-upload"></i>
+        </button>
+    </form></div>
+    
     </div>
     <!-- <br> -->
     <hr>
@@ -85,7 +88,18 @@
                             {% if teacher_role != 'All' %}
                             <div class="availability-input-field">
                                 <label>Department </label>
-                                <input type="text" id="department" name="department"  placeholder="Enter department" value="{{teacher_role}}">
+                                <select id="department" name="department" class="form-control"  disabled>
+                                    <option value="" hidden selected>Select Department</option>
+                                    <option value="B.TECH AD"  {% if teacher_role == 'B.TECH AD' %}selected{% endif %}>AD-ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</option>
+                                    <option value="B.E CIVIL"  {% if teacher_role == 'B.E CIVIL' %}selected{% endif %}>CE-CIVIL ENGINEERING</option>
+                                    <option value="B.TECH CSBS" {% if teacher_role == 'B.TECH CSBS' %}selected{% endif %}>CB-COMPUTER SCIENCE AND BUSINESS SYSTEM</option>
+                                    <option value="B.E CSE" {% if teacher_role == 'B.E CSE' %}selected{% endif %}>CS-COMPUTER SCIENCE AND ENGINEERING</option>
+                                    <option value="B.E EEE" {% if teacher_role == 'B.E EEE' %}selected{% endif %}>EE-ELECTRICAL AND ELECTRONICS ENGINEERING</option>
+                                    <option value="B.E ECE" {% if teacher_role == 'B.E ECE' %}selected{% endif %}>EC-ELECTRONICS AND COMMUNICATION ENGINEERING</option>
+                                    <option value="B.TECH IT" {% if teacher_role == 'B.TECH IT' %}selected{% endif %}>IT-INFORMATION TECHNOLOGY</option>
+                                    <option value="B.E MECH" {% if teacher_role == 'B.E MECH' %}selected{% endif %}>ME-MECHANICAL ENGINEERING</option>
+                                </select>
+                                <!-- <input type="text" id="department" name="department"  placeholder="Enter department" value="{{teacher_role}}"> -->
                             </div>
                             {%endif%}
                             <div class="availability-input-field">
@@ -115,6 +129,14 @@
                             <div class="availability-input-field">
                                 <label>hsc</label>
                                 <input type="number" id="hsc" name="hsc" step="0.01" placeholder="Enter no of arrear">
+                            </div>
+                            <div class="availability-input-field">
+                                <label>Admission Type</label>
+                                <select name="admission_type" class="form-control"  >
+                                    <option  value="" hidden >Select Admission type</option>
+                                    <option value="Regular" >Regular</option>
+                                    <option value="Lateral-Entry" >Lateral-Entry</option>
+                                </select>  
                             </div>
                             <div class="availability-input-field" style="position: relative;">
                                 <label for="semester">Semester</label>
@@ -189,6 +211,9 @@
                                 <th>Semester6</th>
                                 <th>Semester7</th>
                                 <th>Semester8</th>
+                                <th>Admission Type</th>
+                                <th>Contact Number</th>
+
 
                             </tr>
                         </thead>
@@ -212,7 +237,10 @@
                                 <td>{{value.semester5}}</td>
                                 <td>{{value.semester6}}</td>
                                 <td>{{value.semester7}}</td>
-                                <td>{{value.semester8}}</td></tr>
+                                <td>{{value.semester8}}</td>
+                                <td>{{value.admission_type}}</td>
+                                <td>{{value.contact_number}}</td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>

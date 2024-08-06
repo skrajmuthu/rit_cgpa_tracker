@@ -33,6 +33,7 @@ urlpatterns = [
     path('download/', views.download_excel, name='download_excel'),
     path('upload/', views.upload_cgpa, name='upload_cgpa'),
     path('logout/', views.logout, name='logout'),
+    path('visulaization/', views.visulaization, name='visulaization'),
     
 
 ]

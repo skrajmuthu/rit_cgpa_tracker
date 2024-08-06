@@ -21,6 +21,7 @@ import json
 from django.urls import reverse
 from django.http import FileResponse
 from django.contrib import messages
+import matplotlib.pyplot as plt
 
 
 
@@ -107,7 +108,7 @@ def index(request):
 def student(request):
     role = request.GET.get('role')
     current_year = datetime.now().year
-    batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
+    batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 3, current_year + 1)]
     try:
         teacher_role = request.session.get('user')['deportment']
     except TypeError:
@@ -142,7 +143,7 @@ def insert_grade(request):
     if role == 'teacher' and request.session.get('user_auth'):
         teacher_role = request.session.get('user')['deportment']
         current_year = datetime.now().year
-        batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
+        batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 3, current_year + 1)]
         if request.method == 'POST':
             reg_no = request.POST.get('reg_no')
             try:
@@ -192,7 +193,7 @@ def insert_grade(request):
                 user.sem8 = sem8
                 user.save()
                 # messages.success(request, 'Data successfully added/updated.')
-                return render(request,'student.html',{'message':"Data successfully added/updated."})
+                return render(request,'student.html',{'message':"Data successfully added/updated.","batch_years":batch_years,'role':role,'teacher_role':teacher_role})
 
             else:
                 print('Form errors:', form.errors)  
@@ -210,7 +211,7 @@ def accadamic_details(request):
         user=request.session.get('user', {})
         user_name=user['username']
         current_year = datetime.now().year
-        batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 4, current_year + 1)]
+        batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 3, current_year + 1)]
         user = request.session.get('email')
         teacher_role = request.session.get('user')['deportment']
         try:
@@ -228,6 +229,7 @@ def accadamic_details(request):
             hsc = request.POST.get('hsc')
             semesters = request.POST.getlist('semester')
             gpa = request.POST.get('gpa')
+            admission_type =request.POST.get('admission_type')
             filters = {}
 
             if cgpa:
@@ -246,7 +248,8 @@ def accadamic_details(request):
 
             if batch:
                 filters['batch'] = batch
-
+            if admission_type:
+                filters['admission_type'] = admission_type
             if sslc:
                 filters['sslc__gte'] = float(sslc)
 
@@ -255,8 +258,6 @@ def accadamic_details(request):
 
             # Apply filters to the queryset
             students = Student.objects.filter(**filters)
-
-            
 
             # Apply semester filters
             if semesters and gpa:
@@ -268,7 +269,6 @@ def accadamic_details(request):
                     semester_filters &= semester_filter
 
                 students = students.filter(semester_filters)
-            
             return render(request, 'hod/accadamic_details.html',{"batch_years":batch_years,"data":students,'role':role,'teacher_role':teacher_role})
         return render(request, 'hod/accadamic_details.html',{"batch_years":batch_years,"data":data,'role':role,'teacher_role':teacher_role})
     else:
@@ -288,6 +288,8 @@ def upload_cgpa(request):
     if role == 'teacher' and request.session.get('user_auth'):
         teacher_role = request.session.get('user')['deportment']
         data = Student.objects.filter(department=teacher_role)
+        current_year = datetime.now().year
+        batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 3, current_year + 1)]
         if request.method == 'POST':
             excel_file = request.FILES['file']
 
@@ -299,13 +301,15 @@ def upload_cgpa(request):
             try:
                 df = pd.read_excel(excel_file)
             except Exception as e:
+                message=f'Error reading Excel file: {str(e)}'
                 messages.error(request, f'Error reading Excel file: {str(e)}')
-                return redirect('upload_cgpa')
+                return render(request, 'hod/accadamic_details.html', {"batch_years":batch_years,"data": data, 'message': message, 'teacher_role': teacher_role,'role':role})
 
             # Verify the columns in the uploaded file
             if not all(column in df.columns for column in expected_columns):
+                message='The uploaded file does not match the required format.Please check the excel'
                 messages.error(request, 'The uploaded file does not match the required format.')
-                return redirect('upload_cgpa')
+                return render(request, 'hod/accadamic_details.html', {"batch_years":batch_years,"data": data, 'message': message, 'teacher_role': teacher_role,'role':role})
 
             # Replace NaN values with None and convert appropriate columns to correct data types
             df = df.where(pd.notnull(df), None)
@@ -335,7 +339,9 @@ def upload_cgpa(request):
                         'semester5': row['semester5'],
                         'semester6': row['semester6'],
                         'semester7': row['semester7'],
-                        'semester8': row['semester8']
+                        'semester8': row['semester8'],
+                        'admission_type':row["admission_type"],
+                        'contact_number' : row["contact_number"],
                     }
 
                     student, created = Student.objects.update_or_create(
@@ -352,9 +358,9 @@ def upload_cgpa(request):
                 message = 'Student data uploaded successfully!'
                 messages.success(request, message)
             
-            return render(request, 'hod/accadamic_details.html', {"data": data, 'message': message, 'teacher_role': teacher_role})
+            return render(request, 'hod/accadamic_details.html', {"batch_years":batch_years,"data": data, 'message': message, 'teacher_role': teacher_role,'role':role})
 
-        return render(request, 'hod/accadamic_details.html', {"data": data, 'teacher_role': teacher_role})
+        return render(request, 'hod/accadamic_details.html', {"batch_years":batch_years,"data": data, 'teacher_role': teacher_role,'role':role})
     else:
         return redirect('login')
 
@@ -367,5 +373,77 @@ def dashboard(request):
     if  request.session.get('user_auth'):
         teacher_role = request.session.get('user')['deportment']
         return render(request, 'dashboard.html', { 'teacher_role': teacher_role,'role':role})
+    else:
+        return redirect('login')
+    
+
+import matplotlib.pyplot as plt
+import io
+import base64
+def generate_pie_chart(counts, dpi, fontsize, title, colors=None):
+    fig, ax = plt.subplots()
+    
+    # If colors are provided, use them; otherwise, let matplotlib choose default colors
+    if colors is not None:
+        wedges, text, autotexts = ax.pie(counts, labels=None, autopct='', startangle=90, colors=colors)
+    else:
+        wedges, text, autotexts = ax.pie(counts, labels=None, autopct='', startangle=90)
+
+    # Display the count values in the center of each pie slice with increased font size
+    for autotext, count in zip(autotexts, counts):
+        autotext.set_text(str(count))
+        autotext.set_fontsize(fontsize)
+
+    ax.axis('equal')
+    ax.set_title(title, fontsize=40)  # Add title
+
+    # Save the plot as a BytesIO object with adjusted DPI
+    image_stream = io.BytesIO()
+    plt.savefig(image_stream, format='png', dpi=dpi)
+    plt.close()
+
+    # Convert the BytesIO object to base64 encoding
+    image_base64 = base64.b64encode(image_stream.getvalue()).decode('utf-8')
+
+    return image_base64
+
+
+def visulaization(request):
+    role = request.GET.get('role')
+    if  request.session.get('user_auth'):
+        teacher_role = request.session.get('user')['deportment']
+        
+        current_year = datetime.now().year
+        current_year = datetime.now().year
+
+        batch_years = [f'{year}-{(year + 4) % 100:02d}' for year in range(current_year - 3, current_year + 1)]
+        colors = ['#0000ff','#008000']  # Define your colors here
+
+        visulaization_dis={}
+        total_count = {}
+        departement = ['B.TECH AD','B.E CIVIL','B.TECH CSBS','B.E CSE','B.E EEE','B.E ECE','B.TECH IT','B.E MECH']
+
+        if teacher_role != 'All':
+            for i in batch_years:
+                count = Student.objects.filter(department=teacher_role,batch=i).count()
+                sizes = [count, 120-count]
+                visulaization_dis[i] = generate_pie_chart(sizes,35,50,i,colors)
+            count =Student.objects.filter(department=teacher_role).count()
+            total_count[teacher_role]=count
+        
+        elif teacher_role == "All":
+            
+            for dept in departement:
+                dept_dis={}
+                for i in batch_years:
+                    count = Student.objects.filter(department=dept,batch=i).count()
+                    sizes = [count, 120-count]
+                    dept_dis[i] = generate_pie_chart(sizes,35,50,i,colors)
+                visulaization_dis[dept]=dept_dis
+                count =Student.objects.filter(department=dept).count()
+                total_count[dept]=count
+   
+
+        return render(request, 'visulaization.html', { 'teacher_role': teacher_role,'role':role,'visulaization_dis':visulaization_dis,"total_count":total_count})
     else:
         return redirect('login')

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>RIT Transport</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+       
+
+    </style>
+</head>
+<body>
+ 
+<!-- End vertical navbar -->
+{% block maincontent %}
+<div class="rit"></div>
+
+
+<!-- Page content holder -->
+<div class="page-content p-5 " id="content">
+  <!-- Toggle button -->
+  <div class="sidebarCollapse">
+    <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
+    <a href="" hidden id="django-message">{{message|default:0}}</a>
+</div>
+<div class="title">
+    <h2 class="display-5" style="margin-bottom: .9rem;">Student Data Form</h2>
+    
+</div>
+  <div class="row ">
+ {% if teacher_role != 'All' %}
+    <div class="container">
+        <h2 class="display-5" style="margin-bottom: .9rem;"></h2>
+        {% for count in total_count%}
+    <div class="card">
+        <div class="card-head">
+            <h2>{{ count}}</h2>
+
+            <span class="las la-user-friends"></span>
+        </div>
+        
+        <div class="card-progress">
+            <small>TOTAL STUDENTS</small>
+            <div class="progress">
+                <div class="progress-bar bg-warning" role="progressbar" style="width: {{count}}%;" aria-valuenow="{{ count }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>            
+            
+        </div>
+    </div>
+  {% endfor%}
+    <div style="margin-top: 30px;">   
+        {% for key, data in visulaization_dis.items %} 
+            <img src="data:image/png;base64,{{ data }}" alt="Department Distribution Chart">
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if teacher_role == 'All' %}
+<div class="container">
+    
+    {% for count_key ,count_values in total_count.items%}
+    <h2 class="display-5" style="margin-bottom: .9rem;">{{count_key}}</h2>
+
+<div class="card">
+    <div class="card-head">
+        <h2>{{ count_values}}</h2>
+
+        <span class="las la-user-friends"></span>
+    </div>
+    <div class="card-progress">
+        <small>TOTAL STUDENTS</small>
+        <div class="progress">
+            <div class="progress-bar bg-warning" role="progressbar" style="width: {{count_values}}%;" aria-valuenow="{{ count_values }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>            
+        
+    </div>
+</div>
+<!-- {{visulaization_dis}} -->
+<div style="margin-top: 30px;">   
+    {% for key, data in visulaization_dis.items %} 
+    <!-- {{data}} -->
+     {% if key == count_key %}
+    {% for i,j in data.items%}
+        <img src="data:image/png;base64,{{ j }}" alt="Department Distribution Chart">
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+</div>
+{% endfor%}
+</div>
+{% endif %}
+
+
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}
+</body>
+</html>

@@ -90,6 +90,18 @@
                 <label>current bag of log</label>
                 <input type="number" name="bag_of_log" value="{{ reg_value.bag_of_log }}" placeholder="Enter No of Current Arrear" required>
               </div>
+              <div class="input-field">
+                <label> Admission type</label>
+                <select name="admission_type" value="{{ reg_value.admission_type }}" class="form-control"   required>
+                    <option  value="" hidden >Select Admission type</option>
+                    <option value="Regular" {% if reg_value.admission_type == 'Regular' %}selected{% endif %}>Regular</option>
+                    <option value="Lateral-Entry" {% if reg_value.admission_type == 'Lateral-Entry' %}selected{% endif %} >Lateral-Entry</option>
+                </select>      
+            </div>
+            <div class="input-field">
+                <label>contact_number</label>
+                <input type="text" name="contact_number" value="{{ reg_value.contact_number }}"  placeholder="Enter contact_number" required>
+            </div>
 <!-- 
               <div class="input-field">
                 <label>Bag Of Log</label>

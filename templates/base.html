@@ -27,8 +27,8 @@
            CGPA
           </h4>
         <p class="font-weight-normal text-muted mb-0">Track</p>
-        
-        <p class="font-weight-normal text-muted mb-0">For {{role}}</p>
+        {% if role == 'student' or teacher_role != 'All'%}
+        <p class="font-weight-normal text-muted mb-0">For {{role}}</p>  {% endif %}
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
     <li class="nav-item">
       <a href="{% url 'student' %}?role=teacher" class="nav-link text-dark bg-light">
                 <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
-                Single Entry
+                Student Entry (update)
             </a>
     </li>
     {% endif %}
@@ -60,10 +60,17 @@
     <li class="nav-item">
       <a href="{% url 'accadamic_details' %}?role=teacher"  class="nav-link text-dark">
                 <i class="fa fa-address-card mr-3 text-primary fa-fw"></i>
-                Table 
+                Student Details (CGPA)
             </a>
     </li>
     {% endif %}
+    {% if role == 'teacher' or role == None%}
+    <li class="nav-item">
+      <a href="{% url 'visulaization' %}?role=teacher"  class="nav-link text-dark">
+                <i class="fa fa-address-card mr-3 text-primary fa-fw"></i>
+                visulaization
+            </a>
+    </li>{% endif %}
     <!-- <li class="nav-item" >
       <a href="{% url 'insert_grade' %}"  class="nav-link text-dark">
                 <i class="fa fa-solid fa-bus mr-3 text-primary fa-fw"></i>
