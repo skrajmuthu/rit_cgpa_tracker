@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .form import Student_form,userform
 from django.db.models import Q
-
+import matplotlib
+matplotlib.use('Agg')
 from .models import Student,User,defalut_email_id
 from datetime import datetime
 from django.contrib.auth import login as auth_login
